@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Heroes;
 using MenuData;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class GameMenu : MonoBehaviour
         Battle = GameBattleProvider.Battle;
         this.actionMenu = Battle.ActionMenu;
         this.actionMenu.OnHide += onHide;
+        GameBattleProvider.Battle.TurnSystem.OnActiveChanged += OnActiveChanged;
         //this.Orientation = Orientation.Vertical;
         this.radius = this.GetComponent<RectTransform>().rect.height/2;
         this.height_ = this.GetComponent<RectTransform>().rect.height/2;
@@ -41,8 +43,17 @@ public class GameMenu : MonoBehaviour
         onHide(actionMenu.Showing);
         
     }
-    
-    
+
+    private void OnActiveChanged(object obj)
+    {
+        if (obj is Hero hero)
+        {
+            Debug.Log($"GameMenu - OnActiveChanged {obj}");
+            DrawAll();
+        }
+    }
+
+
     public void HandleAction(InputAction.CallbackContext context)
     {
         // 2
@@ -56,9 +67,7 @@ public class GameMenu : MonoBehaviour
           if (old != newAction)
           {
               endingAngle += preStartingAngle_;
-              foreach (Transform child in transform) {
-                  GameObject.Destroy(child.gameObject);
-              }
+              
        
               DrawAll();
           }
@@ -74,9 +83,7 @@ public class GameMenu : MonoBehaviour
             if (old != newAction)
             {
                 endingAngle -= preStartingAngle_;
-                foreach (Transform child in transform) {
-                    GameObject.Destroy(child.gameObject);
-                }
+                
        
                 DrawAll();
             }
@@ -98,8 +105,11 @@ public class GameMenu : MonoBehaviour
         // var pos =  angled(radius,endingAngle);
         // lineRenderer.SetPosition(0, transform.position);
         // lineRenderer.SetPosition(1, pos);
-        Debug.Log($"GameMenu - ActiveAction = {actionMenu.ActiveAction}, {actionMenu.SelectedIndex}");
+        Debug.Log($"GameMenu - ActiveAction = {actionMenu.ActiveAction.Name}, {actionMenu.SelectedIndex} {actionMenu.Items.Length}");
         Debug.Log(actionMenu.SelectedIndex);
+        foreach (Transform child in transform) {
+            GameObject.Destroy(child.gameObject);
+        }
         for (int i = 0; i < actionMenu.Items.Length; i++)
         {
             var item = actionMenu.Items[actionMenu.Items.Length - i - 1];
