@@ -98,6 +98,7 @@ public class TargetSystemView : MonoBehaviour
         textObj.transform.localScale = Vector3.one;
         textObj.transform.localPosition = new Vector3(0,0,0);
         
+        
         return new EnemyView( view,enemy,text);
     }
 
