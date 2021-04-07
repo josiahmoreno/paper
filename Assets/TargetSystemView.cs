@@ -51,6 +51,7 @@ public class TargetSystemView : MonoBehaviour
                 rect.localScale = scale;
                 var pos =  new Vector2(0,70);
                 rect.localPosition = pos;
+                
             }
         }
     }
@@ -59,12 +60,19 @@ public class TargetSystemView : MonoBehaviour
     {
         public GameObject _gameObject;
         public Enemy _enemy;
+        public Text text;
 
-        public EnemyView(GameObject gameObject, Enemy enemy)
+        public EnemyView(GameObject gameObject, Enemy enemy, Text text)
         {
             _gameObject = gameObject;
             _enemy = enemy;
+            this.text = text;
+            enemy.Health.OnHealthChange += (sender, i) =>
+            {
+                this.text.text = $"{enemy.ToString()}";
+            };
         }
+        
     }
     private EnemyView CreateEnemy(Enemy enemy, int index)
     {
@@ -81,7 +89,16 @@ public class TargetSystemView : MonoBehaviour
         rect.transform.localScale = scale;
         var image = view.AddComponent<Image>();
         image.color = Color.white;
-        return new EnemyView( view,enemy);
+        var textObj = new GameObject();
+        var text = textObj.AddComponent<Text>();
+        text.font = Font.CreateDynamicFontFromOSFont("Arial",14);
+        text.color = Color.black;
+        text.text = enemy.ToString();
+        textObj.transform.SetParent(view.transform);
+        textObj.transform.localScale = Vector3.one;
+        textObj.transform.localPosition = new Vector3(0,0,0);
+        
+        return new EnemyView( view,enemy,text);
     }
 
     private void OnShowing(bool obj)
