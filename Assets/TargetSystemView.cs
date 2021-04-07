@@ -96,9 +96,7 @@ public class TargetSystemView : MonoBehaviour
         text.text = enemy.ToString();
         textObj.transform.SetParent(view.transform);
         textObj.transform.localScale = Vector3.one;
-        textObj.transform.localPosition = new Vector3(0,0,0);
-        
-        
+        textObj.transform.localPosition = new Vector3(0, 0, 0);
         return new EnemyView( view,enemy,text);
     }
 
