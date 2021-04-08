@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -17,7 +18,44 @@ public class BattleController : MonoBehaviour
         var sub = PlayerInput.actions["Submit"];
        
         sub.performed += OnSubmitPerformed;
+        var navigate = PlayerInput.actions["Navigate"];
+        navigate.performed += ActionOnperformed;
+        var keyboard = navigate.controls;
+        var left = navigate.controls.First(control => control.name.Contains("left"));
+        
+        //PlayerInput.uiInputModule.move.ToInputAction().performed += ActionOnperformed;
+        // var left = keyboard.actionMap["Left"];
+        // left.performed += LeftOnperformed;
+
     }
+
+    private void ActionOnperformed(InputAction.CallbackContext obj)
+    {
+        Debug.Log(obj.action.name);
+        var control = obj.control;
+        if (control.name.Contains("left") )
+        {
+            if (control.IsPressed())
+            {
+                Debug.Log($"{obj.action.name} pressed" );
+                Provider.Battle.TargetSystem.MoveTargetLeft();
+            }
+        }
+        if (control.name.Contains("right") )
+        {
+            if (control.IsPressed())
+            {
+                Debug.Log($"{obj.action.name} pressed" );
+                Provider.Battle.TargetSystem.MoveTargetRight();
+            }
+        }
+    }
+
+    private void LeftOnperformed(InputAction.CallbackContext obj)
+    {
+        Provider.Battle.TargetSystem.MoveTargetLeft();
+    }
+
     private void OnSubmitPerformed(InputAction.CallbackContext obj)
     {
       Provider.Battle.Execute();
