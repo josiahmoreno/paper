@@ -10,6 +10,8 @@ public class TargetSystemView : MonoBehaviour
 
     private float width;
     private Dictionary<Enemy, EnemyView> map;
+    private EnemyView _targetedEnemy;
+    private GameObject _littleBlock;
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +37,10 @@ public class TargetSystemView : MonoBehaviour
 
     private void ActiveChanged(Enemy[] obj)
     {
-        
+        if (_littleBlock != null)
+        {
+            Destroy(_littleBlock);
+        }
         foreach (Enemy enemy in obj)
         {
             if (map.ContainsKey(enemy))
@@ -51,7 +56,9 @@ public class TargetSystemView : MonoBehaviour
                 rect.localScale = scale;
                 var pos =  new Vector2(0,70);
                 rect.localPosition = pos;
-                
+                _targetedEnemy = map[enemy];
+                _littleBlock = littleBlock;
+                break;
             }
         }
     }
