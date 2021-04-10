@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Heroes;
 using MenuData;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -29,6 +28,7 @@ public class GameMenu : MonoBehaviour
         Battle = GameBattleProvider.Battle;
         this.actionMenu = Battle.ActionMenu;
         this.actionMenu.OnHide += onHide;
+        GameBattleProvider.Battle.ActionMenu.OnActiveActionChanged += ActionMenuOnOnActiveActionChanged;
         GameBattleProvider.Battle.TurnSystem.OnActiveChanged += OnActiveChanged;
         //this.Orientation = Orientation.Vertical;
         this.radius = this.GetComponent<RectTransform>().rect.height/2;
@@ -42,6 +42,11 @@ public class GameMenu : MonoBehaviour
         DrawAll();
         onHide(actionMenu.Showing);
         
+    }
+
+    private void ActionMenuOnOnActiveActionChanged(object sender, IActionMenuData e)
+    {
+        DrawAll();
     }
 
     private void OnActiveChanged(object obj)

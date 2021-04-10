@@ -20,6 +20,8 @@ public class BattleController : MonoBehaviour
         sub.performed += OnSubmitPerformed;
         var navigate = PlayerInput.actions["Navigate"];
         navigate.performed += ActionOnperformed;
+        var cancel = PlayerInput.actions["Cancel"];
+                cancel.performed += OnCancel;
         var keyboard = navigate.controls;
         var left = navigate.controls.First(control => control.name.Contains("left"));
         
@@ -27,6 +29,37 @@ public class BattleController : MonoBehaviour
         // var left = keyboard.actionMap["Left"];
         // left.performed += LeftOnperformed;
 
+    }
+
+    private void OnCancel(InputAction.CallbackContext obj)
+    {
+        var control = obj.control;
+        if (control.IsPressed())
+        {
+            Provider.Battle.Cancel();
+        }
+    }
+
+    public void HandleAction(InputAction.CallbackContext context)
+    {
+        Debug.Log(context.action.name);
+        var control = context.control;
+        if (control.name.Contains("down") )
+        {
+            if (!control.IsPressed())
+            {
+                Debug.Log($"{control.name} pressed" );
+                Provider.Battle.MoveTargetDown();
+            }
+        }
+        if (control.name.Contains("up") )
+        {
+            if (!control.IsPressed())
+            {
+                Debug.Log($"{control.name} pressed" );
+                Provider.Battle.MoveTargetUp();
+            }
+        }
     }
 
     private void ActionOnperformed(InputAction.CallbackContext obj)
@@ -37,7 +70,7 @@ public class BattleController : MonoBehaviour
         {
             if (control.IsPressed())
             {
-                Debug.Log($"{obj.action.name} pressed" );
+                Debug.Log($"{control.name} pressed" );
                 Provider.Battle.TargetSystem.MoveTargetLeft();
             }
         }
@@ -45,7 +78,7 @@ public class BattleController : MonoBehaviour
         {
             if (control.IsPressed())
             {
-                Debug.Log($"{obj.action.name} pressed" );
+                Debug.Log($"{control.name} pressed" );
                 Provider.Battle.TargetSystem.MoveTargetRight();
             }
         }
