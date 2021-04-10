@@ -9,14 +9,14 @@ public class TargetSystemView : MonoBehaviour
     public GameBattleProvider Provider;
 
     private float width;
-    private Dictionary<Enemy, EnemyView> map;
-    private EnemyView _targetedEnemy;
+    private Dictionary<Enemy, EnemyViewHolder> map;
+    public EnemyViewHolder TargetedEnemy;
     private GameObject _littleBlock;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.map = new Dictionary<Enemy, EnemyView>();
+        this.map = new Dictionary<Enemy, EnemyViewHolder>();
         Provider.Battle.TargetSystem.OnShowing += OnShowing;
         Provider.Battle.TargetSystem.ActiveChanged += ActiveChanged;
         OnShowing(Provider.Battle.TargetSystem.Showing);
@@ -56,32 +56,15 @@ public class TargetSystemView : MonoBehaviour
                 rect.localScale = scale;
                 var pos =  new Vector2(0,70);
                 rect.localPosition = pos;
-                _targetedEnemy = map[enemy];
+                TargetedEnemy = map[enemy];
                 _littleBlock = littleBlock;
                 break;
             }
         }
     }
 
-    private class EnemyView
-    {
-        public GameObject _gameObject;
-        public Enemy _enemy;
-        public Text text;
-
-        public EnemyView(GameObject gameObject, Enemy enemy, Text text)
-        {
-            _gameObject = gameObject;
-            _enemy = enemy;
-            this.text = text;
-            enemy.Health.OnHealthChange += (sender, i) =>
-            {
-                this.text.text = $"{enemy.ToString()}";
-            };
-        }
-        
-    }
-    private EnemyView CreateEnemy(Enemy enemy, int index)
+    
+    private EnemyViewHolder CreateEnemy(Enemy enemy, int index)
     {
         float spacing = width / Provider.Battle.Enemies.Count;
         var view = new GameObject();
@@ -104,7 +87,7 @@ public class TargetSystemView : MonoBehaviour
         textObj.transform.SetParent(view.transform);
         textObj.transform.localScale = Vector3.one;
         textObj.transform.localPosition = new Vector3(0, 0, 0);
-        return new EnemyView( view,enemy,text);
+        return new EnemyViewHolder( view,enemy,text);
     }
 
     private void OnShowing(bool obj)
