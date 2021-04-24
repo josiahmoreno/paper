@@ -22,8 +22,9 @@ namespace Test
             //foo.Property1 = 1;
             var entityProvider = new Mock<ICharacterEntityProvider>();
             entityProvider.Setup(e => e.GetPrefab(It.IsAny<Heroes.Heroes>())).Returns(new GameObject());
-            entityProvider.Setup(e => e.GetBattlePosition(It.IsAny<Heroes.Heroes>())).Returns(new Vector3());
-            _battleFieldViewModel = new BattlefieldViewModel(_battle,entityProvider.Object);
+            var battlefieldPositioner = new Mock<IBattlefieldPositioner>();
+            battlefieldPositioner.Setup(e => e.SetBattlePosition(It.IsAny<CharacterEntity>())).Returns(new Vector3());
+            _battleFieldViewModel = new BattlefieldViewModel(_battle,entityProvider.Object,battlefieldPositioner.Object);
         }
         [Test]
         public void CreateCharacterEntityWhenBattleIsStarting()

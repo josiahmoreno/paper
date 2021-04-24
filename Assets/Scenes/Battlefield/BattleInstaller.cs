@@ -1,4 +1,5 @@
 using EntityProvider;
+using Scenes.Battlefield;
 using UnityEngine;
 using Zenject;
 
@@ -16,6 +17,7 @@ public class BattleInstaller : MonoInstaller
         Container.Bind<Battle.Battle>().FromInstance(_provider.Battle).NonLazy();
         Container.Bind<IBattleFieldViewModel>().To<BattlefieldViewModel>().AsTransient();
         Container.BindInterfacesAndSelfTo<IEnityProviderImpl>().FromNewComponentOnNewGameObject().AsSingle();
+        Container.BindInterfacesAndSelfTo<IBattlefieldPositionerImpl>().FromNewComponentOnNewGameObject().AsSingle();
 
     }
     

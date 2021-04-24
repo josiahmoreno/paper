@@ -40,33 +40,21 @@ public class Battlefield : MonoBehaviour
     
 }
 
-public interface IBattleFieldViewModel: INotifyPropertyChanged
-{
-    Battle.Battle _battle { get; }
-    ObservableCollection<CharacterEnity> CharacterEntities { get; }
-}
 public class BattlefieldViewModel: IBattleFieldViewModel
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    [Inject]
+    public Battle.Battle Battle { get; private set; }
 
-    protected void NotifyPropertyChanged(string propertyName = "", [CallerMemberName] string callerName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    public Battle.Battle _battle { get; private set; }
+    private ObservableCollection<CharacterEntity> _characterEntities;
 
-    private ObservableCollection<CharacterEnity> _characterEntities;
-
-    public ObservableCollection<CharacterEnity> CharacterEntities
+    public ObservableCollection<CharacterEntity> CharacterEntities
     {
         get { return _characterEntities; }
         set { _characterEntities = value;
             NotifyPropertyChanged("CharacterEntities");
         }
     }
-
-    [Inject] public Battle.Battle battle;
-    public BattlefieldViewModel(Battle.Battle battle, ICharacterEntityProvider entityProvider, IBattlefieldPositioner battlefieldPositioner = null)
+    public BattlefieldViewModel(Battle.Battle battle, ICharacterEntityProvider entityProvider, IBattlefieldPositioner battlefieldPositioner)
     {
         if (battle == null)
         {
@@ -78,10 +66,13 @@ public class BattlefieldViewModel: IBattleFieldViewModel
             throw new NullReferenceException();
         }
 
-         
+        if (battlefieldPositioner == null)
+        {
+            throw new NullReferenceException();
+        }
         
         Debug.Log($"{GetType().Name} -Construct");
-        this._battle = battle;
+        this.Battle = battle;
 
         void OnBattleStateStoreOnBattleStateChanged(object sender, BatleStateChangeEventArgs args)
         {
@@ -90,7 +81,9 @@ public class BattlefieldViewModel: IBattleFieldViewModel
                 case BattleState.NONE:
                     break;
                 case BattleState.STARTING:
-                    CharacterEntities = CreateCharacterEntities(_battle, entityProvider);
+                    CharacterEntities = CreateCharacterEntities(Battle, entityProvider);
+  
+                    battlefieldPositioner.SetBattlePosition(CharacterEntities);
                     
                     break;
                 case BattleState.STARTED:
@@ -104,41 +97,43 @@ public class BattlefieldViewModel: IBattleFieldViewModel
             }
         }
 
-        this._battle.BattleStateStore.BattleStateChanged += OnBattleStateStoreOnBattleStateChanged;
-        OnBattleStateStoreOnBattleStateChanged(_battle,new BatleStateChangeEventArgs(_battle.State));
+        this.Battle.BattleStateStore.BattleStateChanged += OnBattleStateStoreOnBattleStateChanged;
+        OnBattleStateStoreOnBattleStateChanged(Battle,new BatleStateChangeEventArgs(Battle.State));
     }
 
-    private ObservableCollection<CharacterEnity> CreateCharacterEntities(Battle.Battle battle, ICharacterEntityProvider entityProvider)
+    private ObservableCollection<CharacterEntity> CreateCharacterEntities(Battle.Battle battle, ICharacterEntityProvider entityProvider)
     {
-        ObservableCollection<CharacterEnity> characterEnities = new ObservableCollection<CharacterEnity>();
+        ObservableCollection<CharacterEntity> characterEnities = new ObservableCollection<CharacterEntity>();
         foreach (var battleHero in battle.Heroes)
         {
             
             GameObject prefab = entityProvider.GetPrefab(battleHero.Identity ?? throw new Exception());
-             characterEnities.Add( new CharacterEnity(battleHero,prefab));
+             characterEnities.Add( new CharacterEntity(battleHero,prefab));
         }
 
         return characterEnities;
     }
-}
-
-public interface IBattlefieldPositioner
-{
     
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void NotifyPropertyChanged(string propertyName = "", [CallerMemberName] string callerName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
 
 public interface ICharacterEntityProvider
 {
     GameObject GetPrefab(global::Heroes.Heroes battleHeroIdentity);
-    Vector3 GetBattlePosition(global::Heroes.Heroes isAny);
+   
 }
 
-public class CharacterEnity
+public class CharacterEntity
 {
     public GameObject prefab;
     public Vector3 battleLocation;
     
-    public CharacterEnity(Hero battleHero, GameObject prefab)
+    public CharacterEntity(Hero battleHero, GameObject prefab)
     {
         this.prefab = prefab;
     }
