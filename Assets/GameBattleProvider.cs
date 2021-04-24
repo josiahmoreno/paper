@@ -8,18 +8,41 @@ using Heroes;
 using Items;
 using MenuData;
 using UnityEngine;
+using Zenject;
 
-public class GameBattleProvider: MonoBehaviour
+public class GameBattleProvider: MonoBehaviour, IInitializable
 {
     public enum MockBattles
     {
         JrTroopaFirst,
         GoombaKingFirst
     }
-    public Battle.Battle Battle { get; set; }
+
+    public Battle.Battle CustomBattle;
+    
+    public Battle.Battle Battle
+    {
+        get
+        {
+            switch (Boss)
+            {
+                case MockBattles.GoombaKingFirst:
+                    return GoombaKing();
+                    break;
+                default: case MockBattles.JrTroopaFirst:
+                    return JrTroopaFirst();
+                    break;
+            }
+        }
+
+        //}
+       // set;
+    }
+
     public MockBattles Boss;
     private void Awake()
     {
+        Debug.Log($"{GetType().Name} - Awake");
         switch (Boss)
         {
            case MockBattles.GoombaKingFirst:
@@ -30,8 +53,10 @@ public class GameBattleProvider: MonoBehaviour
                break;
         }
     }
+    
+    
 
-    public void JrTroopaFirst()
+    public Battle.Battle JrTroopaFirst()
     {
         var bubbleSystem = new TextBubbleSystem();
             var Mario = new Mario(
@@ -46,8 +71,8 @@ public class GameBattleProvider: MonoBehaviour
             {
                 JrTroopa
             };
-            Battle = new Battle.Battle(new List<Hero> { Mario, Goompa }, enemies, bubbleSystem);
-            Battle.AddEventOnStarting(new TextBubbleEvent((battleEvent, battle) =>
+            var battle = new Battle.Battle(new List<Hero> { Mario, Goompa }, enemies, bubbleSystem);
+            battle.AddEventOnStarting(new TextBubbleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("1", "2", "3", "4"));
@@ -55,7 +80,7 @@ public class GameBattleProvider: MonoBehaviour
 
 
             }, (battle) => battle.State == BattleState.STARTING));
-            Battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
+            battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("Nice Job"));
@@ -67,7 +92,7 @@ public class GameBattleProvider: MonoBehaviour
 
             }, (battle) => battle.Enemies.First(enemy => enemy is JrTroopa).Health.CurrentValue == 4));
 
-            Battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
+            battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("Mario is lame!"));
@@ -77,7 +102,7 @@ public class GameBattleProvider: MonoBehaviour
 
             }, (battle) => battle.Enemies.First(enemy => enemy is JrTroopa).Health.CurrentValue == 3));
 
-            Battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
+            battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("Goompa: You are almost there mario!"));
@@ -90,7 +115,7 @@ public class GameBattleProvider: MonoBehaviour
 
             }, (battle) => battle.Enemies.First(enemy => enemy is JrTroopa).Health.CurrentValue == 2));
 
-            Battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
+            battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("Goompa: You are almost there mario!"));
@@ -108,7 +133,7 @@ public class GameBattleProvider: MonoBehaviour
                 // what i return a turn end enum, then battle events haave to end turns!
 
             }, (battle) => battle.Enemies.First(enemy => enemy is JrTroopa).Health.CurrentValue == 1));
-            Battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
+            battle.AddEventOnStart(new BattleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("Goompa: You got Star points", "You get em when u win", "Every 100 you level up", "Git Hard"));
@@ -124,11 +149,12 @@ public class GameBattleProvider: MonoBehaviour
            
           
           
-            Battle.Start();
-            System.Diagnostics.Debug.WriteLine($"State {Battle.State}");
+            battle.Start();
+            System.Diagnostics.Debug.WriteLine($"State {battle.State}");
+            return battle;
     }
 
-    public void GoombaKing()
+    public Battle.Battle GoombaKing()
     {
         var bubbleSystem = new TextBubbleSystem();
         var mario = new Mario(
@@ -145,9 +171,23 @@ public class GameBattleProvider: MonoBehaviour
             new RedGoomba(2),
             new BlueGoomba(2),
         };
-        this.Battle = new Battle.Battle(new List<Hero> { mario, goombario }, enemies, bubbleSystem);
-        Battle.Start();
+        var battle = new Battle.Battle(new List<Hero> { mario, goombario }, enemies, bubbleSystem);
+        battle.Start();
+        return battle;
     }
-    
-    
+
+
+    public void Initialize()
+    {
+        Debug.Log($"{GetType().Name} -Initialize");
+        switch (Boss)
+        {
+            case MockBattles.GoombaKingFirst:
+                GoombaKing();
+                break;
+            case MockBattles.JrTroopaFirst:
+                JrTroopaFirst();
+                break;
+        }
+    }
 }

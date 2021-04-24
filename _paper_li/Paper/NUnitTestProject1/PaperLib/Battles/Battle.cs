@@ -11,7 +11,7 @@ namespace Battle
 {
     public class Battle
     {
-        private BattleStateStore battleState = new BattleStateStore();
+        public IBattleStateStore BattleStateStore = new BattleStateStore();
         public List<Hero> Heroes = new List<Hero>();
         public List<Enemy> Enemies = new List<Enemy>();
         public List<BattleEvent> events = new List<BattleEvent>();
@@ -129,7 +129,7 @@ namespace Battle
         public void Start()
         {
                 CheckLoaded();
-            battleState.State = BattleState.STARTING;
+            BattleStateStore.State = BattleState.STARTING;
 
             Enemies.ForEach(enemy => enemy.OnKilled += Enemy_OnKilled);
             events.ForEach(battleEvent =>
@@ -162,7 +162,7 @@ namespace Battle
                             {
                                 ActionMenu.Start();
                                 HealthCounter.Show();
-                                battleState.State = BattleState.STARTED;
+                                BattleStateStore.State = BattleState.STARTED;
                             });
                         });
                         
@@ -172,7 +172,7 @@ namespace Battle
             {
                 ActionMenu.Start();
                 HealthCounter.Show();
-                battleState.State = BattleState.STARTED;
+                BattleStateStore.State = BattleState.STARTED;
             }
             
         }
@@ -198,7 +198,7 @@ namespace Battle
         {
             if (Enemies.TrueForAll(enemy => enemy.IsDead) && !(TextBubbleSystem != null &&  TextBubbleSystem.Showing))
             {
-                battleState.State = BattleState.ENDED;
+                BattleStateStore.State = BattleState.ENDED;
                 Enemies.ForEach(enemy => enemy.OnKilled -= Enemy_OnKilled);
             }
         }
@@ -235,12 +235,12 @@ namespace Battle
 
         public bool IsStarted()
         {
-            return battleState.IsStarted();
+            return BattleStateStore.IsStarted();
         }
 
         public bool IsEnded()
         {
-            return battleState.IsEnded() && !(TextBubbleSystem != null && TextBubbleSystem.Showing);
+            return BattleStateStore.IsEnded() && !(TextBubbleSystem != null && TextBubbleSystem.Showing);
         }
 
         public void AddEventOnStart(BattleEvent @event)
@@ -267,7 +267,7 @@ namespace Battle
             TargetSystem.Cleanup();
             if (Enemies.TrueForAll(enemy => enemy.IsDead))
             {
-                battleState.State = BattleState.ENDED;
+                BattleStateStore.State = BattleState.ENDED;
                 Enemies.ForEach(enemy => enemy.OnKilled -= Enemy_OnKilled);
             }
             ActionMenu.Process();
@@ -276,7 +276,7 @@ namespace Battle
 
         public void End()
         {
-            battleState.State = BattleState.ENDED;
+            BattleStateStore.State = BattleState.ENDED;
         }
 
         public void ShowOptionsMenu()
@@ -404,7 +404,7 @@ namespace Battle
         }
 
         public string ActiveOptionName { get => actionMenuStore.FetchName(ActiveOption); }
-        public BattleState State { get => battleState.State; }
+        public BattleState State { get => BattleStateStore.State; }
         public ITattleStore TattleStore { get; internal set; } = new TattleStore();
 
         //public IOption[] PartnersOptions { get; set; } = 

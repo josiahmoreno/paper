@@ -32,8 +32,8 @@ public class NewTestScript
         battler.Start();
         battler.TargetSystem.Show(battler.ActionMenu.Items[3].Options[0]);
         _targetSystemView.Provider = _gameBattleProvider;
-        _gameBattleProvider.Battle = battler;
-        var targetSystem = _gameBattleProvider.Battle.TargetSystem;
+        _gameBattleProvider.CustomBattle = battler;
+        var targetSystem = _gameBattleProvider.CustomBattle.TargetSystem;
         
         _targetSystemView.Provider = _gameBattleProvider;
         targetSystem.MoveTargetRight();
