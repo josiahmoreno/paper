@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using Zenject.Internal;
+using Heroes = Heroes.Heroes;
 
 
 public class Battlefield : MonoBehaviour
@@ -63,20 +64,34 @@ public class BattlefieldViewModel: IBattleFieldViewModel
             NotifyPropertyChanged("CharacterEntities");
         }
     }
-    
-    [Inject]
-    public void Construct(Battle.Battle battle)
+
+    [Inject] public Battle.Battle battle;
+    public BattlefieldViewModel(Battle.Battle battle, ICharacterEntityProvider entityProvider, IBattlefieldPositioner battlefieldPositioner = null)
     {
+        if (battle == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        if (entityProvider == null)
+        {
+            throw new NullReferenceException();
+        }
+
+         
+        
         Debug.Log($"{GetType().Name} -Construct");
         this._battle = battle;
-        this._battle.BattleStateStore.BattleStateChanged += (sender, args) =>
+
+        void OnBattleStateStoreOnBattleStateChanged(object sender, BatleStateChangeEventArgs args)
         {
             switch (args.BusinessObject)
             {
                 case BattleState.NONE:
                     break;
                 case BattleState.STARTING:
-                    CharacterEntities = CreateCharacterEntities(_battle);
+                    CharacterEntities = CreateCharacterEntities(_battle, entityProvider);
+                    
                     break;
                 case BattleState.STARTED:
                     break;
@@ -87,30 +102,45 @@ public class BattlefieldViewModel: IBattleFieldViewModel
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        };
+        }
 
+        this._battle.BattleStateStore.BattleStateChanged += OnBattleStateStoreOnBattleStateChanged;
+        OnBattleStateStoreOnBattleStateChanged(_battle,new BatleStateChangeEventArgs(_battle.State));
     }
 
-    private ObservableCollection<CharacterEnity> CreateCharacterEntities(Battle.Battle battle)
+    private ObservableCollection<CharacterEnity> CreateCharacterEntities(Battle.Battle battle, ICharacterEntityProvider entityProvider)
     {
         ObservableCollection<CharacterEnity> characterEnities = new ObservableCollection<CharacterEnity>();
         foreach (var battleHero in battle.Heroes)
         {
-             characterEnities.Add( new CharacterEnity(battleHero));
+            
+            GameObject prefab = entityProvider.GetPrefab(battleHero.Identity ?? throw new Exception());
+             characterEnities.Add( new CharacterEnity(battleHero,prefab));
         }
 
         return characterEnities;
     }
 }
 
+public interface IBattlefieldPositioner
+{
+    
+}
+
+public interface ICharacterEntityProvider
+{
+    GameObject GetPrefab(global::Heroes.Heroes battleHeroIdentity);
+    Vector3 GetBattlePosition(global::Heroes.Heroes isAny);
+}
+
 public class CharacterEnity
 {
     public GameObject prefab;
-    public Transform battleLocation;
-
-    public CharacterEnity(Hero battleHero)
+    public Vector3 battleLocation;
+    
+    public CharacterEnity(Hero battleHero, GameObject prefab)
     {
-        
+        this.prefab = prefab;
     }
 }
 

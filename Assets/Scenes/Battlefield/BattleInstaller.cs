@@ -1,3 +1,4 @@
+using EntityProvider;
 using UnityEngine;
 using Zenject;
 
@@ -9,11 +10,12 @@ public class BattleInstaller : MonoInstaller
     {
         //Container.Bind<IInitializable>().To<GameBattleProvider>().AsSingle();
         //Container.Bind<IInitializable>().To<GameBattleProvider>().;
-            Container.BindInterfacesAndSelfTo<GameBattleProvider>().FromInstance(this._provider).AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<GameBattleProvider>().FromInstance(this._provider).AsSingle().NonLazy();
         //Container.Inject(this);
-        var prov =  Container.Resolve<GameBattleProvider>();
+        //var prov =  Container.Resolve<GameBattleProvider>();
         Container.Bind<Battle.Battle>().FromInstance(_provider.Battle).NonLazy();
         Container.Bind<IBattleFieldViewModel>().To<BattlefieldViewModel>().AsTransient();
+        Container.BindInterfacesAndSelfTo<IEnityProviderImpl>().FromNewComponentOnNewGameObject().AsSingle();
 
     }
     
