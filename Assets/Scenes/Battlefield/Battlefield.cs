@@ -107,7 +107,7 @@ public class BattlefieldViewModel: IBattleFieldViewModel
         foreach (var battleHero in battle.Heroes)
         {
             
-            GameObject prefab = entityProvider.GetPrefab(battleHero.Identity ?? throw new Exception());
+            GameObject prefab = entityProvider.GetGameObjectFromPrefab(battleHero.Identity ?? throw new Exception());
              characterEnities.Add( new CharacterEntity(battleHero,prefab));
         }
 
@@ -124,7 +124,7 @@ public class BattlefieldViewModel: IBattleFieldViewModel
 
 public interface ICharacterEntityProvider
 {
-    GameObject GetPrefab(global::Heroes.Heroes battleHeroIdentity);
+    GameObject GetGameObjectFromPrefab(global::Heroes.Heroes battleHeroIdentity);
    
 }
 

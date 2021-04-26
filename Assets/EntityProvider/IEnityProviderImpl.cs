@@ -7,7 +7,7 @@ namespace EntityProvider
     {
         private GameObject Mario;
         private GameObject Goombario;
-        public GameObject GetPrefab(Heroes.Heroes battleHeroIdentity)
+        public GameObject GetGameObjectFromPrefab(Heroes.Heroes battleHeroIdentity)
         {
             var prefab = Resources.Load<GameObject>($"Heroes/{battleHeroIdentity}/{battleHeroIdentity}");
             if (prefab == null)

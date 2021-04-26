@@ -11,7 +11,7 @@ namespace Test.EntityProviderTest
         public void GetMario()
         {
             ICharacterEntityProvider _enityProvider = new GameObject().AddComponent<IEnityProviderImpl>();
-            Assert.NotNull(_enityProvider.GetPrefab(Heroes.Heroes.Mario));
+            Assert.NotNull(_enityProvider.GetGameObjectFromPrefab(Heroes.Heroes.Mario));
         }
     }
 

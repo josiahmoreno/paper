@@ -1,3 +1,4 @@
+using System;
 using EntityProvider;
 using Scenes.Battlefield;
 using UnityEngine;
@@ -17,7 +18,18 @@ public class BattleInstaller : MonoInstaller
         Container.Bind<Battle.Battle>().FromInstance(_provider.Battle).NonLazy();
         Container.Bind<IBattleFieldViewModel>().To<BattlefieldViewModel>().AsTransient();
         Container.BindInterfacesAndSelfTo<IEnityProviderImpl>().FromNewComponentOnNewGameObject().AsSingle();
-        Container.BindInterfacesAndSelfTo<IBattlefieldPositionerImpl>().FromNewComponentOnNewGameObject().AsSingle();
+       
+        Container.BindInterfacesAndSelfTo<IBattlefieldPositionerImpl>().FromNewComponentOnNewGameObject()
+            .AsSingle()
+            .OnInstantiated(
+                (context, obj) =>
+                {
+                    if (GameObject.Find("DefaultSpot") == null)
+                    {
+                        throw new Exception();
+                    }
+                    (obj as IBattlefieldPositionerImpl).DefaultPosition =  GameObject.Find("DefaultSpot");
+                });
 
     }
     

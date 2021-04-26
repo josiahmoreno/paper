@@ -4,5 +4,5 @@ using Heroes = Heroes.Heroes;
 
 public interface IBattlefieldPositioner
 {
-    Vector3 SetBattlePosition(IEnumerable<CharacterEntity> characterEntity);
+    void SetBattlePosition(IEnumerable<CharacterEntity> characterEntity);
 }
