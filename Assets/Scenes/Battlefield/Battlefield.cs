@@ -31,6 +31,9 @@ public class Battlefield : MonoBehaviour
                         var gameObject = Instantiate(viewModelCharacterEntity.prefab);
                     }
                     break;
+                case "Swapping":
+                    
+                    break;
             }
 
             
@@ -40,7 +43,7 @@ public class Battlefield : MonoBehaviour
     
 }
 
-public class BattlefieldViewModel: IBattleFieldViewModel
+public class BattlefieldViewModel: ViewModelBase,IBattleFieldViewModel
 {
     [Inject]
     public Battle.Battle Battle { get; private set; }
@@ -54,7 +57,33 @@ public class BattlefieldViewModel: IBattleFieldViewModel
             NotifyPropertyChanged("CharacterEntities");
         }
     }
-    public BattlefieldViewModel(Battle.Battle battle, ICharacterEntityProvider entityProvider, IBattlefieldPositioner battlefieldPositioner)
+
+    private bool _swapping;
+
+    public bool Swapping
+    {
+        get => _swapping;
+        set
+        {
+            _swapping = value;
+            NotifyPropertyChanged(nameof(Swapping));
+        }
+    }
+
+    public class SwapTargets
+    {
+        public CharacterEntity partner;
+        public CharacterEntity mario;
+        public Animation animation;
+
+        public SwapTargets(CharacterEntity partner, CharacterEntity mario, Animation animation)
+        {
+            this.partner = partner;
+            this.mario = mario;
+            this.animation = animation;
+        }
+    }
+    public BattlefieldViewModel(Battle.Battle battle, ICharacterEntityProvider entityProvider )
     {
         if (battle == null)
         {
@@ -66,54 +95,20 @@ public class BattlefieldViewModel: IBattleFieldViewModel
             throw new NullReferenceException();
         }
 
-        if (battlefieldPositioner == null)
-        {
-            throw new NullReferenceException();
-        }
+      
         
         Debug.Log($"{GetType().Name} -Construct");
-        this.Battle = battle;
+        
 
-        void OnBattleStateStoreOnBattleStateChanged(object sender, BatleStateChangeEventArgs args)
-        {
-            switch (args.BusinessObject)
-            {
-                case BattleState.NONE:
-                    break;
-                case BattleState.STARTING:
-                    CharacterEntities = CreateCharacterEntities(Battle, entityProvider);
-  
-                    battlefieldPositioner.SetBattlePosition(CharacterEntities);
-                    
-                    break;
-                case BattleState.STARTED:
-                    break;
-                case BattleState.ENDING:
-                    break;
-                case BattleState.ENDED:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        this.Battle.BattleStateStore.BattleStateChanged += OnBattleStateStoreOnBattleStateChanged;
-        OnBattleStateStoreOnBattleStateChanged(Battle,new BatleStateChangeEventArgs(Battle.State));
     }
 
-    private ObservableCollection<CharacterEntity> CreateCharacterEntities(Battle.Battle battle, ICharacterEntityProvider entityProvider)
-    {
-        ObservableCollection<CharacterEntity> characterEnities = new ObservableCollection<CharacterEntity>();
-        foreach (var battleHero in battle.Heroes)
-        {
-            
-            GameObject prefab = entityProvider.GetGameObjectFromPrefab(battleHero.Identity ?? throw new Exception());
-             characterEnities.Add( new CharacterEntity(battleHero,prefab));
-        }
-
-        return characterEnities;
-    }
     
+    
+    
+}
+
+public class ViewModelBase: IViewModelBase
+{
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected void NotifyPropertyChanged(string propertyName = "", [CallerMemberName] string callerName = "")
@@ -125,18 +120,19 @@ public class BattlefieldViewModel: IBattleFieldViewModel
 public interface ICharacterEntityProvider
 {
     GameObject GetGameObjectFromPrefab(global::Heroes.Heroes battleHeroIdentity);
-   
+    ObservableCollection<CharacterEntity> CharacterEntities { get; }
+    event EventHandler<List<CharacterEntity>> OnCharactersSpawned;
 }
 
 public class CharacterEntity
 {
     public GameObject prefab;
     public Vector3 battleLocation;
-    
+    public readonly Hero battleHero;
+
     public CharacterEntity(Hero battleHero, GameObject prefab)
     {
+        this.battleHero = battleHero;
         this.prefab = prefab;
     }
 }
-
-

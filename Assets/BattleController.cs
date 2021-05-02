@@ -4,12 +4,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Zenject;
 
 public class BattleController : MonoBehaviour
 {
     
     public GameBattleProvider Provider;
-
+    [Inject]
+    public Battle.Battle Battle;
     public PlayerInput PlayerInput;
     // Start is called before the first frame update
     void Start()
@@ -36,7 +38,7 @@ public class BattleController : MonoBehaviour
         var control = obj.control;
         if (control.IsPressed())
         {
-            Provider.Battle.Cancel();
+            Battle.Cancel();
         }
     }
 
@@ -49,7 +51,7 @@ public class BattleController : MonoBehaviour
             if (!control.IsPressed())
             {
                 Debug.Log($"{control.name} pressed" );
-                Provider.Battle.MoveTargetDown();
+                Battle.MoveTargetDown();
             }
         }
         if (control.name.Contains("up") )
@@ -57,7 +59,7 @@ public class BattleController : MonoBehaviour
             if (!control.IsPressed())
             {
                 Debug.Log($"{control.name} pressed" );
-                Provider.Battle.MoveTargetUp();
+                Battle.MoveTargetUp();
             }
         }
     }
@@ -71,7 +73,7 @@ public class BattleController : MonoBehaviour
             if (control.IsPressed())
             {
                 Debug.Log($"{control.name} pressed" );
-                Provider.Battle.TargetSystem.MoveTargetLeft();
+                Battle.TargetSystem.MoveTargetLeft();
             }
         }
         if (control.name.Contains("right") )
@@ -79,19 +81,30 @@ public class BattleController : MonoBehaviour
             if (control.IsPressed())
             {
                 Debug.Log($"{control.name} pressed" );
-                Provider.Battle.TargetSystem.MoveTargetRight();
+                Battle.TargetSystem.MoveTargetRight();
             }
         }
     }
 
     private void LeftOnperformed(InputAction.CallbackContext obj)
     {
-        Provider.Battle.TargetSystem.MoveTargetLeft();
+        Battle.TargetSystem.MoveTargetLeft();
     }
 
     private void OnSubmitPerformed(InputAction.CallbackContext obj)
     {
-      Provider.Battle.Execute();
+      Battle.Execute();
+        
+    }
+
+    public void OnSwap(InputAction.CallbackContext obj)
+    {
+        
+        if (obj.canceled)
+        {
+            Debug.Log($"{GetType().Name} - OnSwap ${obj.action.name} {obj.control.name}\n started ={obj.started} performed = {obj.performed} canceled = {obj.canceled}");
+            Battle.TurnSystem.Swap();
+        }
         
     }
 

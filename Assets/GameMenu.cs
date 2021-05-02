@@ -6,32 +6,37 @@ using MenuData;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Zenject;
 
 public class GameMenu : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameBattleProvider GameBattleProvider;
+    [Inject]
     public Battle.Battle Battle;
     private IActionMenu actionMenu;
     private float radius;
     private float height_;
     private double preStartingAngle_ , endingAngle  = Math.PI / 6;
     private LineRenderer lineRenderer;
-    public int lengthOfLineRenderer = 20;
+    public float lengthOfLineRenderer = 20;
     void Start()
     {
         // this.lineRenderer = gameObject.AddComponent<LineRenderer>();
         // lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         // lineRenderer.widthMultiplier = 0.2f;
         // lineRenderer.positionCount = 2;
+        if (Battle == null)
+        {
+            Battle = GameBattleProvider.Battle;
+        }
         
-        Battle = GameBattleProvider.Battle;
         this.actionMenu = Battle.ActionMenu;
         this.actionMenu.OnHide += onHide;
-        GameBattleProvider.Battle.ActionMenu.OnActiveActionChanged += ActionMenuOnOnActiveActionChanged;
-        GameBattleProvider.Battle.TurnSystem.OnActiveChanged += OnActiveChanged;
+        Battle.ActionMenu.OnActiveActionChanged += ActionMenuOnOnActiveActionChanged;
+        Battle.TurnSystem.OnActiveChanged += OnActiveChanged;
         //this.Orientation = Orientation.Vertical;
-        this.radius = this.GetComponent<RectTransform>().rect.height/2;
+        this.radius = lengthOfLineRenderer;
         this.height_ = this.GetComponent<RectTransform>().rect.height/2;
         this.preStartingAngle_ = endingAngle;
         //endingAngle;

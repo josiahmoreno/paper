@@ -24,7 +24,7 @@ namespace Test
             entityProvider.Setup(e => e.GetGameObjectFromPrefab(It.IsAny<Heroes.Heroes>())).Returns(new GameObject());
             var battlefieldPositioner = new Mock<IBattlefieldPositioner>();
             battlefieldPositioner.Setup(e => e.SetBattlePosition(It.IsAny<List<CharacterEntity>>()));
-            _battleFieldViewModel = new BattlefieldViewModel(_battle,entityProvider.Object,battlefieldPositioner.Object);
+            _battleFieldViewModel = new BattlefieldViewModel(_battle,entityProvider.Object);
         }
         [Test]
         public void CreateCharacterEntityWhenBattleIsStarting()
