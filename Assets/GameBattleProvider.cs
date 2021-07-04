@@ -63,16 +63,15 @@ public class GameBattleProvider: MonoBehaviour, IInitializable
                 new Inventory(),
                 new List<IJumps> { new Attacks.Jump() }.ToArray(),
                 new Attacks.Hammer());
-           //var Goompa = new Goompa();
-           var goombario = new Goombario(bubbleSystem);
+           var Goompa = new Goompa();
+           //var goombario = new Goombario(bubbleSystem);
             var scriptAttack = new ScriptAttack(EnemyAttack.JrTroopaPowerJump);
             var JrTroopa = new JrTroopa(new List<IEnemyAttack> { new RegularAttack(EnemyAttack.JrTroopaJump, 1) });
-           var JrTroopa2 = new JrTroopa(new List<IEnemyAttack> { new RegularAttack(EnemyAttack.JrTroopaJump, 1) });
             var enemies = new List<Enemy>()
             {
                 JrTroopa
             };
-            var battle = new Battle.Battle(new List<Hero> { Mario, goombario }, enemies, bubbleSystem);
+            var battle = new Battle.Battle(new List<Hero> { Mario, Goompa }, enemies, bubbleSystem);
             battle.AddEventOnStarting(new TextBubbleEvent((battleEvent, battle) =>
             {
 
@@ -138,7 +137,7 @@ public class GameBattleProvider: MonoBehaviour, IInitializable
             {
 
                 battle.ShowText(new GameText("Goompa: You got Star points", "You get em when u win", "Every 100 you level up", "Git Hard"));
-                battle.Enemies.First(o => o == JrTroopa).Sequence.Add(scriptAttack);
+                //battle.Enemies.First(o => o == JrTroopa).Sequence.Add(scriptAttack);
                 battle.OnTextCompleted((_) =>
                 {
                     battle.EndTurn();

@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: e7011d7b171572148a398986f4ae784b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gameBattleProvider: {instanceID: 0}
+  - JrTroopa: {fileID: 11400000, guid: 723d069ec3ec7894e9c34e65949d3c7c, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

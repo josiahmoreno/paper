@@ -109,7 +109,7 @@ public class ActionViewerViewModel: ViewModelBase, IActionViewerViewModel
         if (obj is Hero hero)
         {
             Debug.Log($"GameMenu - OnActiveChanged {obj}");
-            DrawAll();
+            //DrawAll();
         }
     }
 }
