@@ -15,23 +15,94 @@ MonoBehaviour:
   Heroes:
   - name: Mario
     Playable: 1
-    InventoryInformation: []
     AttacksList: 0100000002000000
+    InventoryInformation: []
+  - name: Goompa
+    Playable: 0
+    AttacksList: 
+    InventoryInformation: []
   Enemies:
   - name: JrTroopa
     AttacksList: 
   BattleEvents:
   - Trigger:
       State: 1
+      Health: 0
       EnemyInformation:
         name: 
         AttacksList: 
-      Health: 0
-    TextBubbleInformation:
-      Speaker: Goombario
-      GameTexts:
-      - 
-      - 2
-      - 3
-      - 4
     EventType: textbubble
+    textBubbleEvent:
+      dialogue:
+      - Speaker: Goompa
+        GameTexts:
+        - 1
+        - 2
+        - 3
+        - 4
+  - Trigger:
+      State: 2
+      Health: 4
+      EnemyInformation:
+        name: JrTroopa
+        AttacksList: 
+    EventType: textbubble
+    textBubbleEvent:
+      dialogue:
+      - Speaker: Goompa
+        GameTexts:
+        - Nice Job!
+  - Trigger:
+      State: 2
+      Health: 3
+      EnemyInformation:
+        name: JrTroopa
+        AttacksList: 
+    EventType: textbubble
+    textBubbleEvent:
+      dialogue:
+      - Speaker: JrTroopa
+        GameTexts:
+        - Mario Is lame!
+  - Trigger:
+      State: 2
+      Health: 2
+      EnemyInformation:
+        name: JrTroopa
+        AttacksList: 
+    EventType: textbubble
+    textBubbleEvent:
+      dialogue:
+      - Speaker: Goompa
+        GameTexts:
+        - 'Goompa: You are almost there mario!'
+  - Trigger:
+      State: 2
+      Health: 1
+      EnemyInformation:
+        name: JrTroopa
+        AttacksList: 
+    EventType: textbubble
+    textBubbleEvent:
+      dialogue:
+      - Speaker: Goompa
+        GameTexts:
+        - 'Goompa: You are almost there mario!'
+      - Speaker: JrTroopa
+        GameTexts:
+        - 'rTroopa: All right, you asked for it", "Full power!!'
+  - Trigger:
+      State: 2
+      Health: 1
+      EnemyInformation:
+        name: JrTroopa
+        AttacksList: 
+    EventType: textbubble
+    textBubbleEvent:
+      dialogue:
+      - Speaker: Goompa
+        GameTexts:
+        - 'Goompa: You got Star points'
+        - You get em when u win
+        - Every 100 you level up
+        - Git Hard

@@ -7,6 +7,7 @@ using Enemies;
 using Heroes;
 using Items;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "Battle", menuName = "Battles/Create Game Battle", order = 1)]
 public class GameBattleScriptableObject : ScriptableObject
@@ -116,7 +117,7 @@ public class BattleEventInformation
 {
     public BattleEventTrigger Trigger;
     public string EventType;
-    public TextBubbleInformation TextBubbleInformation;
+    [FormerlySerializedAs("TextBubbleInformation")] public TextBubbleEvent textBubbleEvent;
   
 }
 
@@ -130,11 +131,15 @@ public class BattleEventTrigger
 }
 
 [Serializable]
+public class TextBubbleEvent
+{
+    public List<TextBubbleInformation> dialogue;
+}
+[Serializable]
 public class TextBubbleInformation
 {
     public string Speaker;
     public List<string> GameTexts;
-    public List<TextBubbleInformation> Dialoge;
 }
 
 

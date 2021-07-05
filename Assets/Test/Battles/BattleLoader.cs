@@ -74,10 +74,14 @@ public class BattleLoader
                 pred = ifStartingPredicate;
                 if (ev.EventType == "textbubble")
                 {
-                    battle.AddEventOnStarting(new TextBubbleEvent((battleEvent, battle) =>
+                    battle.AddEventOnStarting(new Battle.TextBubbleEvent((battleEvent, battle) =>
                     {
-                        battle.ShowText(new GameText(ev.TextBubbleInformation.GameTexts.ToArray()));
-                        battle.OnTextCompleted((_) => battleEvent.Complete());
+                        if (ev.textBubbleEvent.dialogue.Count == 0)
+                        {
+                            battle.ShowText(new GameText(ev.textBubbleEvent.dialogue[0].GameTexts.ToArray()));
+                            battle.OnTextCompleted((_) => battleEvent.Complete());
+                        }
+                       
                     }, battle => pred.Invoke(battle)));
                 }
 
@@ -92,19 +96,20 @@ public class BattleLoader
                 }
                 if (ev.EventType == "textbubble")
                 {
-                    battle.AddEventOnStart(new TextBubbleEvent((battleEvent, battle) =>
+                    battle.AddEventOnStart(new Battle.TextBubbleEvent((battleEvent, battle) =>
                     {
             
-                        battle.ShowText(new GameText(ev.TextBubbleInformation.GameTexts.ToArray()));
+                        
+                        battle.ShowText(new GameText(ev.textBubbleEvent.dialogue[0].GameTexts.ToArray()));
                         battleEvent.Completed = true;
-                        if (ev.TextBubbleInformation.Dialoge.Count != 0)
+                        if (ev.textBubbleEvent.dialogue.Count == 1)
                         {
                             battle.OnTextCompleted((_) => battle.EndTurn());
                         } else
                         {
                             battle.TextBubbleSystem.OnTextCompleted((_) =>
                             {
-                                battle.ShowText(new GameText(ev.TextBubbleInformation.Dialoge[0].GameTexts.ToArray()));
+                                battle.ShowText(new GameText(ev.textBubbleEvent.dialogue[1].GameTexts.ToArray()));
                                 battle.OnTextCompleted(__ =>
                                 {
                                     battle.EndTurn();

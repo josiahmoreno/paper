@@ -72,7 +72,7 @@ public class GameBattleProvider: MonoBehaviour, IInitializable
                 JrTroopa
             };
             var battle = new Battle.Battle(new List<Hero> { Mario, Goompa }, enemies, bubbleSystem);
-            battle.AddEventOnStarting(new TextBubbleEvent((battleEvent, battle) =>
+            battle.AddEventOnStarting(new Battle.TextBubbleEvent((battleEvent, battle) =>
             {
 
                 battle.ShowText(new GameText("1", "2", "3", "4"));
