@@ -135,12 +135,38 @@ public class BattleLoader
 
     private IAttack[] toHammers(List<Attacks.Attacks> heroAttacksList)
     {
-        return new IAttack[0];
+        var list = new List<IAttack>();
+        heroAttacksList.ForEach(att =>
+        {
+            if (att is Attacks.Attacks.BaseHammer)
+            {
+                list.Add(new Hammer());
+            }
+            if (att is Attacks.Attacks.HammerThrow)
+            {
+                list.Add(new HammerThrow());
+            }
+
+        });
+        return list.ToArray();
     }
 
     private IAttack[] toJumps(List<Attacks.Attacks> heroAttacksList)
     {
-        return new IAttack[0];
+        var list = new List<IAttack>();
+        heroAttacksList.ForEach(att =>
+        {
+            if (att is Attacks.Attacks.BaseJump)
+            {
+                list.Add(new Jump());
+            }
+            if (att is Attacks.Attacks.PowerJump)
+            {
+                list.Add(new PowerJump());
+            }
+
+        });
+        return list.ToArray();
     }
 
     private Inventory toInventory(List<InventoryInformation> heroInventoryInformation)

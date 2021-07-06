@@ -10,7 +10,7 @@ using MenuData;
 using UnityEngine;
 using Zenject;
 
-public class GameBattleProvider: MonoBehaviour, IInitializable
+public class GameBattleProvider : MonoBehaviour, IInitializable
 {
     public enum MockBattles
     {
@@ -18,6 +18,8 @@ public class GameBattleProvider: MonoBehaviour, IInitializable
         GoombaKingFirst
     }
 
+    [SerializeField]
+    public GameBattleScriptableObject GameBattleScriptableObject;
     public Battle.Battle CustomBattle;
     
     public Battle.Battle Battle

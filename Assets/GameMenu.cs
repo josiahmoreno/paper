@@ -28,7 +28,14 @@ public class GameMenu : MonoBehaviour
         // lineRenderer.positionCount = 2;
         if (Battle == null)
         {
-            Battle = GameBattleProvider.Battle;
+            if(GameBattleProvider.GameBattleScriptableObject != null)
+            {
+                Battle = new BattleLoader().ConvertToBattle(GameBattleProvider.GameBattleScriptableObject);
+            } else
+            {
+                Battle = GameBattleProvider.Battle;
+            }
+            
         }
         
         this.actionMenu = Battle.ActionMenu;
