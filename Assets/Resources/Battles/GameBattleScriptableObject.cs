@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "Battle", menuName = "Battles/Create Game Battle", order = 1)]
-public class GameBattleScriptableObject : ScriptableObject
+public class GameBattleScriptableObject : ScriptableObject, IBattleProvider
 {
     public List<HeroInformation> Heroes;
     public List<EnemyInformation> Enemies;
@@ -110,6 +110,7 @@ public class GameBattleScriptableObject : ScriptableObject
     //        
     //          battle.Start();
     //          System.Diagnostics.Debug.WriteLine($"State {battle.State}");
+    public Battle.Battle Battle => new BattleLoader().ConvertToBattle(this);
 }
 
 [Serializable]
