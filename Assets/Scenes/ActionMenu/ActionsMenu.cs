@@ -26,6 +26,9 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
     public List<GameObject> _views;
     [Inject]
     private IActionsMenuPresenter presenter;
+
+    [Inject] private IFactory<IActionMenuData,ActionDataView> _factory;
+    //[Inject] private IActionsDataViewSpawner _viewSpawner;
     public struct Degrees
     {
         private float angle;
@@ -54,7 +57,9 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
             var angle = new Degrees((90 - (index * (AngleSpacing))) - StartingAngle);
             (float,float) delta = ((float)(RadiusLength * Math.Cos(angle.toRadians())), ((float) (RadiusLength * Math.Sin(angle.toRadians()))));
             var newLocalPosition = new Vector3(position.x + delta.Item1, position.y + delta.Item2, 0.0f);
-            var view = Instantiate(data.ActionItemPrefab, this.transform);
+            var view = _factory.Create(data.data).gameObject;
+            //var view = _viewSpawner.InstantiateView(data.data,data.ActionItemPrefab, this.transform);
+            //var view = Instantiate(data.ActionItemPrefab, this.transform);
             view.transform.localPosition = newLocalPosition;
             Debug.DrawLine(position,newLocalPosition);
             var debug = StartingPosition.transform.position;
@@ -87,6 +92,11 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
     }
 }
 
+public interface IActionsDataViewSpawner 
+{
+    GameObject InstantiateView(IActionMenuData data,GameObject dataActionItemPrefab, Transform transform);
+}
+
 public class ActionMenuModel: IActionsMenuModel
 {
     [Inject] private readonly ActionMenuSettings Settings;
@@ -102,7 +112,7 @@ public class ActionMenuModel: IActionsMenuModel
     {
         return provider.Battle.ActionMenu.Items.Select(data =>
         {
-            var item = new ActionViewItem(data, Settings.ActionViewPrefab);
+            var item = new ActionViewItem(data,Settings.ResourceProvider.GetSpriteForMenuData(data), Settings.ActionViewPrefab);
             
             return item;
         }).ToList();
@@ -127,10 +137,14 @@ public interface IActionsMenuView
 public class ActionViewItem
 {
     public string name;
-    public ActionViewItem(IActionMenuData data, GameObject actionItemPrefab)
+    public Sprite sprite;
+    public readonly IActionMenuData data;
+
+    public ActionViewItem(IActionMenuData data, Sprite sprite, GameObject actionItemPrefab)
     {
-        this.ActionItemPrefab = actionItemPrefab;
-        name = data.Name;
+        this.data = data;
+        this.sprite = sprite;
+        ActionItemPrefab = actionItemPrefab;
     }
 
     public GameObject ActionItemPrefab { get; private set; }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using MenuData;
+using Scenes.ActionMenu.DataView;
 using Zenject;
 
 class ActionsMenuPresenter: IActionsMenuPresenter
@@ -25,9 +27,11 @@ class ActionsMenuPresenter: IActionsMenuPresenter
     {
         View.Load(e);
     }
+
+    
 }
 
-internal interface IActionsMenuModel
+public interface IActionsMenuModel
 {
     List<ActionViewItem> GetActionsData();
     event EventHandler<List<ActionViewItem>> onCharacterChange;
