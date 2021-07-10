@@ -10,26 +10,21 @@ using Object = UnityEngine.Object;
 
 public class ActionsMenu : MonoBehaviour, IActionsMenuView
 {
-    //[SerializeField] public GameObject ActionItemPrefab;
-
     [SerializeField] public GameObject StartingPosition;
     [SerializeField] public float StartPositionYOffset;
-    
+
     [SerializeField] public float StartingAngle;
 
     [SerializeField] public float RadiusLength;
-    // Start is called before the first frame update
     [SerializeField] public float AngleSpacing;
 
-    //[SerializeField] public GameObject GameBattleProvider;
+   
     public List<ActionViewItem> MenuData;
     public List<GameObject> _views;
     [Inject]
     private IActionsMenuPresenter presenter;
-
-    //[Inject] private IFactory<IActionMenuData,ActionDataView> _factory;
     [Inject] private ActionDataView.Spawner _viewSpawner;
-    //[Inject] TestViewSpawner testViewSpawner;
+   
     public struct Degrees
     {
         private float angle;
@@ -41,7 +36,7 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
 
         public float toRadians()
         {
-            return (float) ((Math.PI / 180) * angle);
+            return (float)((Math.PI / 180) * angle);
         }
     }
     public void Reload()
@@ -57,19 +52,16 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
             var data = MenuData[index];
             Debug.Log($"ameny {GetType().Name} {data.name} start");
             var angle = new Degrees((90 - (index * (AngleSpacing))) - StartingAngle);
-            (float,float) delta = ((float)(RadiusLength * Math.Cos(angle.toRadians())), ((float) (RadiusLength * Math.Sin(angle.toRadians()))));
+            (float, float) delta = ((float)(RadiusLength * Math.Cos(angle.toRadians())), ((float)(RadiusLength * Math.Sin(angle.toRadians()))));
             var newLocalPosition = new Vector3(position.x + delta.Item1, position.y + delta.Item2, 0.0f);
-            //var view = _factory.Create(data.data).gameObject;
-            var view = _viewSpawner.InstantiateView(data,data.ActionItemPrefab, this.transform);
-            //testViewSpawner.InstanView(data, data.ActionItemPrefab,this.transform);
-            Debug.Log($"ameny {GetType().Name} {data.name} end");
-            //var view = Instantiate(data.ActionItemPrefab, this.transform);
+            
+            var view = _viewSpawner.InstantiateView(data, data.ActionItemPrefab, this.transform);
             view.transform.localPosition = newLocalPosition;
-            Debug.DrawLine(position,newLocalPosition);
+            Debug.DrawLine(position, newLocalPosition);
             var debug = StartingPosition.transform.position;
             debug.y = debug.y + StartPositionYOffset;
-            
-            Debug.DrawLine(debug,view.transform.position,Color.blue,11f,false);
+
+            Debug.DrawLine(debug, view.transform.position, Color.blue, 11f, false);
             view.name = $"Element {index}";
             _views.Add(view);
         }
@@ -82,26 +74,24 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
     }
     void Start()
     {
-        //var provider = GameBattleProvider.GetComponent<IBattleProvider>();
-        //presenter = new ActionsMenuPresenter(new ActionMenuModel(provider));
-        presenter.View = this;
+       
         presenter.OnStart();
-        //Reload();
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
 
-public interface IActionsDataViewSpawner 
+public interface IActionsDataViewSpawner
 {
-    GameObject InstantiateView(ActionViewItem data,GameObject dataActionItemPrefab, Transform transform);
+    GameObject InstantiateView(ActionViewItem data, GameObject dataActionItemPrefab, Transform transform);
 }
 
-public class ActionMenuModel: IActionsMenuModel
+public class ActionMenuModel : IActionsMenuModel
 {
     [Inject] private readonly ActionMenuSettings Settings;
     [Inject]
@@ -117,8 +107,8 @@ public class ActionMenuModel: IActionsMenuModel
         return provider.Battle.ActionMenu.Items.Select(data =>
         {
             //Debug.Log($"ActionMenuModel - {data.Name}");
-            var item = new ActionViewItem(data,Settings.ResourceProvider.GetSpriteForMenuData(data), Settings.ActionViewPrefab);
-            
+            var item = new ActionViewItem(data, Settings.ResourceProvider.GetSpriteForMenuData(data), Settings.ActionViewPrefab);
+
             return item;
         }).ToList();
     }

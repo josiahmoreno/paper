@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2030868366d49f7a4b7a40b0a1c7c21, type: 3}
   m_Name: ResourceScriptableObject
   m_EditorClassIdentifier: 
-  Jump: {fileID: 1520289397, guid: 1e2e6c9baf2444beaafbbb6b3c5f7404, type: 3}
+  Jump: {fileID: 1114893022, guid: 1e2e6c9baf2444beaafbbb6b3c5f7404, type: 3}
   Strategies: {fileID: 1851034093, guid: 1e2e6c9baf2444beaafbbb6b3c5f7404, type: 3}
-  Item: {fileID: 1114893022, guid: 1e2e6c9baf2444beaafbbb6b3c5f7404, type: 3}
+  Item: {fileID: 1851034093, guid: 1e2e6c9baf2444beaafbbb6b3c5f7404, type: 3}
   Hammer: {fileID: 779954352, guid: 1e2e6c9baf2444beaafbbb6b3c5f7404, type: 3}

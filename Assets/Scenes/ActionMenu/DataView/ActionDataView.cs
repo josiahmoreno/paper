@@ -11,12 +11,12 @@ public class ActionDataView : MonoBehaviour, IActionDataView
     [Inject] 
     public IActionDataPresenter Presenter;
     public Image Icon;
-    
+    public Image Background;
     // Start is called before the first frame update
     void Start()
     {
-        //Presenter = new ActionDataPresenter(new ActionDataModel(new ActionViewItem(null,null,null)));
-        //Presenter.OnStart();
+        
+        Presenter.OnStart();
     }
 
     // Update is called once per frame
@@ -30,6 +30,21 @@ public class ActionDataView : MonoBehaviour, IActionDataView
         Icon.sprite = modelMenuData.sprite;
     }
 
+    public void Deselect()
+    {
+        Background.enabled = false ;
+    }
+
+    public void Load(Sprite sprite)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Select()
+    {
+        Background.color = Color.red;
+        Background.enabled = true;
+    }
 
     public class Spawner: IActionsDataViewSpawner
     {
@@ -44,7 +59,6 @@ public class ActionDataView : MonoBehaviour, IActionDataView
         {
 
             var game =  factory.Create(data,transform).gameObject ;
-            //game.transform.SetParent(transform);
             return game;
         }
     }
@@ -62,5 +76,8 @@ public interface IActionDataPresenter
 
 public interface IActionDataView
 {
+    void Deselect();
     void Load(ActionViewItem modelMenuData);
+    void Load(Sprite sprite);
+    void Select();
 }

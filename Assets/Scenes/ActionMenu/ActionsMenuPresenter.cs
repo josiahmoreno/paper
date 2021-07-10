@@ -9,8 +9,9 @@ class ActionsMenuPresenter: IActionsMenuPresenter
     [Inject]
     private IActionsMenuModel model;
 
-    public ActionsMenuPresenter(IActionsMenuModel actionMenuModel)
+    public ActionsMenuPresenter(IActionsMenuView view,IActionsMenuModel actionMenuModel)
     {
+        this.View = view;
         this.model = actionMenuModel;
     }
 

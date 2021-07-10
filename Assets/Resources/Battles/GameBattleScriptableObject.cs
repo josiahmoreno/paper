@@ -16,6 +16,7 @@ public class GameBattleScriptableObject : ScriptableObject, IBattleProvider
     public List<EnemyInformation> Enemies;
 
     public List<BattleEventInformation> BattleEvents;
+    private Battle.Battle _Battle;
     // var bubbleSystem = new TextBubbleSystem();
     //          var Mario = new Mario(
     //              new Inventory(),
@@ -110,7 +111,17 @@ public class GameBattleScriptableObject : ScriptableObject, IBattleProvider
     //        
     //          battle.Start();
     //          System.Diagnostics.Debug.WriteLine($"State {battle.State}");
-    public Battle.Battle Battle => new BattleLoader().ConvertToBattle(this);
+    public Battle.Battle Battle
+    {
+        get
+        {
+            if (_Battle == null)
+            {
+                _Battle = new BattleLoader().ConvertToBattle(this);
+            }
+            return _Battle;
+        }
+    }
 }
 
 [Serializable]
@@ -119,7 +130,7 @@ public class BattleEventInformation
     public BattleEventTrigger Trigger;
     public string EventType;
     [FormerlySerializedAs("TextBubbleInformation")] public TextBubbleEvent textBubbleEvent;
-  
+
 }
 
 [Serializable]
@@ -128,7 +139,7 @@ public class BattleEventTrigger
     public BattleState State;
     public int Health;
     public EnemyInformation EnemyInformation;
-   
+
 }
 
 [Serializable]
@@ -152,7 +163,7 @@ public class HeroInformation
     public bool Playable;
     public List<Attacks.Attacks> AttacksList;
     public List<InventoryInformation> InventoryInformation;
-    
+
 }
 
 [Serializable]
