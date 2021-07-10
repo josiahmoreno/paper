@@ -18,22 +18,6 @@ namespace Scenes.ActionMenu.DataView
         {
             View.Load(Model.MenuData);
         }
-        
-        public class Factory : PlaceholderFactory<IActionMenuData,ActionDataPresenter>
-        {
-            private DiContainer _container;
-            private ActionDataModel.Factory modelFactory;
-
-            public Factory(DiContainer container, ActionDataModel.Factory modelFactory)
-            {
-                _container = container;
-                this.modelFactory = modelFactory;
-            }
-
-            public override ActionDataPresenter Create(IActionMenuData menuData)
-            {
-                return new ActionDataPresenter(modelFactory.Create(menuData));
-            }
-        }
+      
     }
 }

@@ -15,7 +15,8 @@ public class ActionDataView : MonoBehaviour, IActionDataView
     // Start is called before the first frame update
     void Start()
     {
-        Presenter.OnStart();
+        //Presenter = new ActionDataPresenter(new ActionDataModel(new ActionViewItem(null,null,null)));
+        //Presenter.OnStart();
     }
 
     // Update is called once per frame
@@ -30,29 +31,25 @@ public class ActionDataView : MonoBehaviour, IActionDataView
     }
 
 
-    public class Spawner: MonoBehaviour, IActionsDataViewSpawner, IFactory
+    public class Spawner: IActionsDataViewSpawner
     {
-        //[Inject] 
-       // private Factory _factory;
+        private Factory factory;
 
-        private DiContainer _container;
-
-        public Spawner(DiContainer container)
+        public Spawner(ActionDataView.Factory factory)
         {
-            _container = container;
-          //  _factory = factory;
+            this.factory = factory;
         }
 
-        public GameObject InstantiateView(IActionMenuData data,GameObject dataActionItemPrefab, Transform transform)
+        public GameObject InstantiateView(ActionViewItem data,GameObject dataActionItemPrefab, Transform transform)
         {
-            Debug.Log($"yoooo instan view container == null{ _container == null}");
-            var view = _container.Instantiate<ActionDataView>();
-            view.transform.SetParent(transform);
-            return view.gameObject;
+
+            var game =  factory.Create(data,transform).gameObject ;
+            //game.transform.SetParent(transform);
+            return game;
         }
     }
 
-    public class Factory : PlaceholderFactory<IActionMenuData,ActionDataView>
+    public class Factory : PlaceholderFactory<ActionViewItem, Transform,ActionDataView>
     {
         
     }

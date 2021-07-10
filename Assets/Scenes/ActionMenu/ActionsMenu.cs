@@ -27,8 +27,9 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
     [Inject]
     private IActionsMenuPresenter presenter;
 
-    [Inject] private IFactory<IActionMenuData,ActionDataView> _factory;
-    //[Inject] private IActionsDataViewSpawner _viewSpawner;
+    //[Inject] private IFactory<IActionMenuData,ActionDataView> _factory;
+    [Inject] private ActionDataView.Spawner _viewSpawner;
+    //[Inject] TestViewSpawner testViewSpawner;
     public struct Degrees
     {
         private float angle;
@@ -54,11 +55,14 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
         for (var index = 0; index < MenuData.Count; index++)
         {
             var data = MenuData[index];
+            Debug.Log($"ameny {GetType().Name} {data.name} start");
             var angle = new Degrees((90 - (index * (AngleSpacing))) - StartingAngle);
             (float,float) delta = ((float)(RadiusLength * Math.Cos(angle.toRadians())), ((float) (RadiusLength * Math.Sin(angle.toRadians()))));
             var newLocalPosition = new Vector3(position.x + delta.Item1, position.y + delta.Item2, 0.0f);
-            var view = _factory.Create(data.data).gameObject;
-            //var view = _viewSpawner.InstantiateView(data.data,data.ActionItemPrefab, this.transform);
+            //var view = _factory.Create(data.data).gameObject;
+            var view = _viewSpawner.InstantiateView(data,data.ActionItemPrefab, this.transform);
+            //testViewSpawner.InstanView(data, data.ActionItemPrefab,this.transform);
+            Debug.Log($"ameny {GetType().Name} {data.name} end");
             //var view = Instantiate(data.ActionItemPrefab, this.transform);
             view.transform.localPosition = newLocalPosition;
             Debug.DrawLine(position,newLocalPosition);
@@ -82,7 +86,7 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
         //presenter = new ActionsMenuPresenter(new ActionMenuModel(provider));
         presenter.View = this;
         presenter.OnStart();
-        Reload();
+        //Reload();
     }
 
     // Update is called once per frame
@@ -94,7 +98,7 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
 
 public interface IActionsDataViewSpawner 
 {
-    GameObject InstantiateView(IActionMenuData data,GameObject dataActionItemPrefab, Transform transform);
+    GameObject InstantiateView(ActionViewItem data,GameObject dataActionItemPrefab, Transform transform);
 }
 
 public class ActionMenuModel: IActionsMenuModel
@@ -112,6 +116,7 @@ public class ActionMenuModel: IActionsMenuModel
     {
         return provider.Battle.ActionMenu.Items.Select(data =>
         {
+            //Debug.Log($"ActionMenuModel - {data.Name}");
             var item = new ActionViewItem(data,Settings.ResourceProvider.GetSpriteForMenuData(data), Settings.ActionViewPrefab);
             
             return item;
@@ -143,6 +148,7 @@ public class ActionViewItem
     public ActionViewItem(IActionMenuData data, Sprite sprite, GameObject actionItemPrefab)
     {
         this.data = data;
+        this.name = data.Name;
         this.sprite = sprite;
         ActionItemPrefab = actionItemPrefab;
     }
