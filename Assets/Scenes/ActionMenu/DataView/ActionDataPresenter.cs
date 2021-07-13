@@ -14,6 +14,20 @@ namespace Scenes.ActionMenu.DataView
         {
             View = view;
             Model = model;
+            Model.OnSelectedChanged += OnSelectedChanged;
+        }
+
+        private void OnSelectedChanged(object sender, bool isSelected)
+        {
+            if (isSelected)
+            {
+                View.Select();
+            }
+            else
+            {
+                View.Deselect();
+            }
+           
         }
 
         public void OnStart()
@@ -22,7 +36,12 @@ namespace Scenes.ActionMenu.DataView
             Load(Model.MenuData);
         }
 
-        private void Load(ActionViewItem menuData)
+        public void OnDestroy()
+        {
+            Model.OnSelectedChanged -= OnSelectedChanged;
+        }
+
+        private void Load(IActionViewItem menuData)
         {
             if (Model.IsSelected)
             {

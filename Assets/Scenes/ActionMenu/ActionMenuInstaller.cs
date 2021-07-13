@@ -2,6 +2,7 @@
 using System;
 using MenuData;
 using Scenes.ActionMenu.DataView;
+using Tests;
 using UnityEngine;
 using Zenject;
 
@@ -18,7 +19,7 @@ namespace Scenes.ActionMenu
         {
             Debug.Log("InstallBindings");
             Container.BindInstance(Settings);
-            Container.BindFactory<ActionViewItem, Transform ,ActionDataView, ActionDataView.Factory>()
+            Container.BindFactory<IActionViewItem, Transform ,ActionDataView, ActionDataView.Factory>()
                 .To<ActionDataView>()
                 .FromSubContainerResolve()
                 .ByMethod((subCon,data, parent) =>
@@ -35,7 +36,9 @@ namespace Scenes.ActionMenu
             Container.Bind<ActionDataView.Spawner>().AsSingle();
             Container.Bind<IBattleProvider>().FromInstance(GameBattleScriptableObject);
             Container.Bind<MenuData.IActionMenu>().FromInstance(GameBattleScriptableObject.Battle.ActionMenu);
+            Container.Bind<ITurnSystem>().FromInstance(GameBattleScriptableObject.Battle.TurnSystem);
             Container.BindInterfacesAndSelfTo<ActionsMenu>().FromComponentInHierarchy().AsSingle();
+            Container.BindInterfacesAndSelfTo<TestMenuChanger>().FromComponentInHierarchy().AsSingle();
             Container.Bind<IActionsMenuPresenter>().To<ActionsMenuPresenter>().AsTransient();
             Container.Bind<IActionsMenuModel>().To<ActionMenuModel>().AsTransient();
 

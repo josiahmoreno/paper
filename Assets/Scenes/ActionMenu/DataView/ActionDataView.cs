@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MenuData;
@@ -19,13 +20,18 @@ public class ActionDataView : MonoBehaviour, IActionDataView
         Presenter.OnStart();
     }
 
+    private void OnDestroy()
+    {
+        Presenter.OnDestroy();
+    }
+
     // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void Load(ActionViewItem modelMenuData)
+    public void Load(IActionViewItem modelMenuData)
     {
         Icon.sprite = modelMenuData.sprite;
     }
@@ -55,7 +61,7 @@ public class ActionDataView : MonoBehaviour, IActionDataView
             this.factory = factory;
         }
 
-        public GameObject InstantiateView(ActionViewItem data,GameObject dataActionItemPrefab, Transform transform)
+        public GameObject InstantiateView(IActionViewItem data,GameObject dataActionItemPrefab, Transform transform)
         {
 
             var game =  factory.Create(data,transform).gameObject ;
@@ -63,7 +69,7 @@ public class ActionDataView : MonoBehaviour, IActionDataView
         }
     }
 
-    public class Factory : PlaceholderFactory<ActionViewItem, Transform,ActionDataView>
+    public class Factory : PlaceholderFactory<IActionViewItem, Transform,ActionDataView>
     {
         
     }
@@ -72,12 +78,13 @@ public class ActionDataView : MonoBehaviour, IActionDataView
 public interface IActionDataPresenter
 {
     void OnStart();
+    void OnDestroy();
 }
 
 public interface IActionDataView
 {
     void Deselect();
-    void Load(ActionViewItem modelMenuData);
+    void Load(IActionViewItem modelMenuData);
     void Load(Sprite sprite);
     void Select();
 }

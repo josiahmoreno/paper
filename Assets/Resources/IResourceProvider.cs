@@ -1,4 +1,5 @@
 using System;
+using Heroes;
 using MenuData;
 using UnityEngine;
 using Zenject;
@@ -18,9 +19,17 @@ using Zenject;
                     throw new Exception();
 ;            }
         }
+
+        public Sprite GetSpriteForMenuData(Hero hero, IActionMenuData data)
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 
     public interface IResourceProvider
     {
-        Sprite GetSpriteForMenuData(IActionMenuData data);
+        Sprite GetSpriteForMenuData(Hero hero, IActionMenuData data);
+        
     }

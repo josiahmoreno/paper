@@ -13,6 +13,14 @@ class ActionsMenuPresenter: IActionsMenuPresenter
     {
         this.View = view;
         this.model = actionMenuModel;
+        this.model.OnMoveUp += (_,_) =>
+        {
+            view.MoveUp();
+        };
+        this.model.OnMoveDown += (_,_) =>
+        {
+            view.MoveDown();
+        };
     }
 
     public IActionsMenuView View { get; set; }
@@ -24,16 +32,21 @@ class ActionsMenuPresenter: IActionsMenuPresenter
         model.onCharacterChange += onCharacterChange;
     }
 
-    private void onCharacterChange(object sender, List<ActionViewItem> e)
+    private void onCharacterChange(object sender, List<IActionViewItem> e)
     {
         View.Load(e);
     }
+    
+    
 
     
 }
 
 public interface IActionsMenuModel
 {
-    List<ActionViewItem> GetActionsData();
-    event EventHandler<List<ActionViewItem>> onCharacterChange;
+    List<IActionViewItem> GetActionsData();
+    event EventHandler<List<IActionViewItem>> onCharacterChange;
+
+    event EventHandler OnMoveUp;
+    event EventHandler OnMoveDown;
 }

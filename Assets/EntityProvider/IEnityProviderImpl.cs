@@ -17,7 +17,7 @@ namespace EntityProvider
         private  IBattlefieldPositioner _battlefieldPositioner;
         [Inject]
         public void Construct(Battle.Battle battle, IBattlefieldPositioner battlefieldPositioner)
-        {
+        { 
             Debug.Log($"{GetType().Name} init");
             this.Battle = battle;
             this._battlefieldPositioner = battlefieldPositioner;

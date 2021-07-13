@@ -1,4 +1,5 @@
 using System;
+using Heroes;
 using MenuData;
 using UnityEngine;
 
@@ -10,7 +11,9 @@ using UnityEngine;
         public Sprite Strategies;
         public Sprite Item;
         public Sprite Hammer;
-        public Sprite GetSpriteForMenuData(IActionMenuData data)
+        public Sprite goombario;
+        
+        public Sprite GetSpriteForMenuData(Hero hero,IActionMenuData data)
         {
             switch (data.Name)
             {
@@ -22,6 +25,15 @@ using UnityEngine;
                     return Item;
                 case "Hammer":
                     return Hammer;
+                case "Abilities":
+                    if (hero.Identity == Heroes.Heroes.Goombario)
+                    {
+                        return goombario;
+                    }
+                    else
+                    {
+                        return Strategies;
+                    }
                 default:
                     throw new Exception($"data: {data.Name} not found");
             }

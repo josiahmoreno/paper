@@ -1,12 +1,16 @@
+using System;
+using System.ComponentModel;
 using MenuData;
+using UnityEngine.UIElements;
 
 namespace Scenes.ActionMenu.DataView
 {
-    public interface IActionDataModel
+    public interface IActionDataModel: INotifyPropertyChanged
     {
-        ActionViewItem MenuData { get; }
+        IActionViewItem MenuData { get; }
         bool IsSelected { get; }
 
-        object GetSprite();
+        event EventHandler<bool> OnSelectedChanged;
+
     }
 }

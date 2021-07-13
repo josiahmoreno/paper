@@ -17,6 +17,10 @@ MonoBehaviour:
     Playable: 1
     AttacksList: 0100000002000000
     InventoryInformation: []
+  - name: Goombario
+    Playable: 1
+    AttacksList: 
+    InventoryInformation: []
   Enemies:
   - name: JrTroopa
     AttacksList: 
