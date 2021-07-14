@@ -1,6 +1,9 @@
 using System;
+using Enemies;
 using Heroes;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Scenes.BattlefieldOrderer
 {
@@ -9,7 +12,7 @@ namespace Scenes.BattlefieldOrderer
     {
         public Sprite Mario;
         public Sprite Goombario;
-        
+        public List<SpriteObject> Sprites;
         public Sprite GetSpriteForHero(Hero hero)
         {
             switch (hero.Identity)
@@ -22,5 +25,21 @@ namespace Scenes.BattlefieldOrderer
 
             throw new Exception("cant find sprite");
         }
+
+        public Sprite GetEnemySprite(Enemy enemy)
+        {
+            return GetSprite(enemy.Identifier);
+        }
+
+        public Sprite GetSprite(string enemyIdentifier)
+        {
+            return Sprites.First( s => s.Identifier == enemyIdentifier).Sprite;
+        }
+    }
+    [Serializable]
+    public struct SpriteObject
+    {
+        public string Identifier;
+        public Sprite Sprite;
     }
 }

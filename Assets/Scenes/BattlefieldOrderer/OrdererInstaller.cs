@@ -10,6 +10,8 @@ using Zenject;
 public class OrdererInstaller: ScriptableObjectInstaller<OrdererInstaller>
 {
     public OrdererSettings Settings;
+    [Inject] public IBattleProvider IBattleProvider;
+    [Inject]
     public GameBattleScriptableObject GameBattleScriptableObject;
     public CharacterSpritesScriptableObject CharacterSpritesScriptableObject;
     public override void InstallBindings()
@@ -35,7 +37,8 @@ public class OrdererInstaller: ScriptableObjectInstaller<OrdererInstaller>
             });
         Container.BindInterfacesAndSelfTo<BattlefieldOrderer>().FromComponentsInHierarchy().AsSingle();
         Debug.Log("InstallBindings - BattlefieldOrderer");
-        Container.Bind<Battle.Battle>().FromInstance(GameBattleScriptableObject.Battle);
+        //Container.Bind<IBattleProvider>().FromInstance(GameBattleScriptableObject);
+        
         Container.BindInterfacesAndSelfTo<BattlefieldPositioner2>()
             .AsSingle();
             

@@ -13,6 +13,8 @@ namespace Scenes.ActionMenu
     {
 
         public ActionMenuSettings Settings;
+        [Inject] public IBattleProvider BattleProvider;
+        [Inject]
         public GameBattleScriptableObject GameBattleScriptableObject;
       
         public override void InstallBindings()
@@ -34,9 +36,9 @@ namespace Scenes.ActionMenu
                     .AsSingle();
                 });
             Container.Bind<ActionDataView.Spawner>().AsSingle();
-            Container.Bind<IBattleProvider>().FromInstance(GameBattleScriptableObject);
-            Container.Bind<MenuData.IActionMenu>().FromInstance(GameBattleScriptableObject.Battle.ActionMenu);
-            Container.Bind<ITurnSystem>().FromInstance(GameBattleScriptableObject.Battle.TurnSystem);
+            //Container.Bind<IBattleProvider>().FromInstance(GameBattleScriptableObject);
+            Container.Bind<MenuData.IActionMenu>().FromInstance(BattleProvider.Battle.ActionMenu);
+            Container.Bind<ITurnSystem>().FromInstance(BattleProvider.Battle.TurnSystem);
             Container.BindInterfacesAndSelfTo<ActionsMenu>().FromComponentInHierarchy().AsSingle();
             Container.BindInterfacesAndSelfTo<TestMenuChanger>().FromComponentInHierarchy().AsSingle();
             Container.Bind<IActionsMenuPresenter>().To<ActionsMenuPresenter>().AsTransient();

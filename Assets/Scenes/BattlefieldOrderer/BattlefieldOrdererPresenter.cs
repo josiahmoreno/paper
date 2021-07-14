@@ -13,6 +13,7 @@ namespace Scenes.BattlefieldOrderer
 
         public void OnStart()
         {
+            this.view.LoadMario(model.GetMario());
             this.view.LoadCharacters(model.GetBattlers());
         }
     }

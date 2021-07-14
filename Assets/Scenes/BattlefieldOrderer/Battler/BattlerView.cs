@@ -16,11 +16,13 @@ namespace Scenes.BattlefieldOrderer
         private void Start()
         {
             Presenter.OnStart();
+            
         }
         
         public void LoadSprite(Sprite getSprite)
         {
             sprite.sprite = getSprite;
+            sprite.preserveAspect = true;
         }
     }
 }

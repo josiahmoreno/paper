@@ -117,11 +117,13 @@ public class GameBattleScriptableObject : ScriptableObject, IBattleProvider
         {
             if (_Battle == null)
             {
+                Debug.Log("GAMEBATTLESO - Creating new battle");
                 _Battle = new BattleLoader().ConvertToBattle(this);
             }
             return _Battle;
         }
     }
+    
 }
 
 [Serializable]
