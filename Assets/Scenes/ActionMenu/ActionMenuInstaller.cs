@@ -21,20 +21,27 @@ namespace Scenes.ActionMenu
         {
             Debug.Log("InstallBindings");
             Container.BindInstance(Settings);
-            Container.BindFactory<IActionViewItem, Transform ,ActionDataView, ActionDataView.Factory>()
+            Container.BindFactory<IActionViewItem, Transform, ActionDataView, ActionDataView.Factory>()
                 .To<ActionDataView>()
                 .FromSubContainerResolve()
-                .ByMethod((subCon,data, parent) =>
+                .ByNewPrefabInstaller<ActionDataInstaller>(Settings.ActionViewPrefab)
+                .UnderTransform((injectContext) =>
                 {
-                    subCon.BindInstance(data).AsSingle();
-                    subCon.BindInterfacesAndSelfTo<ActionDataModel>().AsTransient();
-                    subCon.BindInterfacesAndSelfTo<ActionDataPresenter>().AsTransient();
-                    Debug.Log($"parent name = {parent?.name}");
-                    subCon.BindInterfacesAndSelfTo<ActionDataView>()
-                    .FromComponentInNewPrefab(Settings.ActionViewPrefab)
-                    .UnderTransform(parent)
-                    .AsSingle();
+                    var t = injectContext.Container.Resolve<ActionsMenu>().transform;
+                    return t;
                 });
+                ;
+                //.ByMethod((subCon,data, parent) =>
+                //{
+                //    subCon.BindInstance(data).AsSingle();
+                //    subCon.BindInterfacesAndSelfTo<ActionDataModel>().AsTransient();
+                //    subCon.BindInterfacesAndSelfTo<ActionDataPresenter>().AsTransient();
+                //    Debug.Log($"parent name = {parent?.name}");
+                //    subCon.BindInterfacesAndSelfTo<ActionDataView>()
+                //    .FromComponentInNewPrefab(Settings.ActionViewPrefab)
+                //    .UnderTransform(parent)
+                //    .AsSingle();
+                //});
             Container.Bind<ActionDataView.Spawner>().AsSingle();
             //Container.Bind<IBattleProvider>().FromInstance(GameBattleScriptableObject);
             Container.Bind<MenuData.IActionMenu>().FromInstance(BattleProvider.Battle.ActionMenu);

@@ -48,7 +48,7 @@ public class ActionDataView : MonoBehaviour, IActionDataView
 
     public void Select()
     {
-        Background.color = Color.red;
+        //Background.color = Color.red;
         Background.enabled = true;
     }
 

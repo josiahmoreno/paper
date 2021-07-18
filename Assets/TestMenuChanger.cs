@@ -12,6 +12,8 @@ public class TestMenuChanger : MonoBehaviour, IMenuMovementChangeProvider
     [SerializeField] private Button up;
 
     [SerializeField] private Button down;
+    [SerializeField] private Button left;
+    [SerializeField] private Button right;
     // Start is called before the first frame update
     private int index;
     void Start()
@@ -42,6 +44,20 @@ public class TestMenuChanger : MonoBehaviour, IMenuMovementChangeProvider
         //OnMoveUp?.Invoke(this,new EventArgs());
     }
     
+    public void moveLeft()
+    {
+        _provider.Battle.TargetSystem.MoveTargetLeft();
+    }
+
+    public void moveRight()
+    {
+        _provider.Battle.TargetSystem.MoveTargetRight();
+    }
+
+    public void execute()
+    {
+        _provider.Battle.Execute();
+    }
     public void moveDown()
     {
         _provider.Battle.MoveTargetDown();

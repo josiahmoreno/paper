@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mario: {fileID: 21300000, guid: c320028c9dee6486d844fa2f527425f3, type: 3}
   Goombario: {fileID: 1074095765, guid: b5942057a3b5a4175b6a5307cfeecc21, type: 3}
+  Sprites:
+  - Identifier: JrTroopa
+    Sprite: {fileID: 612417633, guid: 804169ed620a38444843b76d5f956f2e, type: 3}
+  - Identifier: Goomba
+    Sprite: {fileID: 238543131, guid: 6e82a4b5368a56c498622848e267db08, type: 3}

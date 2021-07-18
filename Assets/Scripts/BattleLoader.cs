@@ -5,6 +5,7 @@ using Attacks;
 using Battle;
 using Heroes;
 using Items;
+using PaperLib.Enemies;
 using Enemy = Enemies.Enemy;
 
 public class BattleLoader
@@ -48,6 +49,10 @@ public class BattleLoader
                 var scriptAttack = new ScriptAttack(EnemyAttack.JrTroopaPowerJump);
                 var JrTroopa = new Enemies.JrTroopa(new List<IEnemyAttack> { new RegularAttack(EnemyAttack.JrTroopaJump, 1) });
                 enemies.Add(JrTroopa);
+            }
+            if(enemy.name == "Goomba")
+            {
+                enemies.Add(new EnemyFactory().FetchEnemy<NewGoomba>());
             }
 
         });

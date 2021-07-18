@@ -28,7 +28,7 @@ namespace Scenes.BattlefieldOrderer
             return enemies.Select(enemy =>
             {
                 Sprite sprite = provider.GetEnemySprite(enemy);
-                var battler = new Battler(sprite);
+                var battler = new Battler(sprite,enemy);
                 var view =  _factory.Create(battler,null);
                 var position = positioner.GetPosition(enemy);
          
@@ -42,7 +42,7 @@ namespace Scenes.BattlefieldOrderer
         {
             Debug.Log($"BattlerSpawner spawn provider == null {provider}");
             var sprite = provider.GetSpriteForHero(hero);
-            var battler = new Battler(sprite);
+            var battler = new Battler(sprite,hero);
             var view =  _factory.Create(battler,null);
             var position = positioner.GetPosition(hero);
          
@@ -105,7 +105,12 @@ namespace Scenes.BattlefieldOrderer
 
         public Vector3 GetPosition(Enemy enemy)
         {
-            return enemyPositions[enemy];
+            if(enemyPositions.TryGetValue(enemy,out Vector3 vector3))
+            {
+                return vector3;
+            }
+            Debug.Log($"can't find position for {enemy.Identifier}");
+            return Vector3.zero;
         }
 
         public void LoadEnemies(List<Enemy> enemies)
@@ -157,9 +162,21 @@ namespace Scenes.BattlefieldOrderer
     {
         public Sprite Sprite { get; }
 
-        public Battler(Sprite sprite)
+        public Enemy Enemy { get; }
+
+        public Hero Hero { get; }
+
+        public Battler(Sprite sprite, Enemy enemy)
         {
             Sprite = sprite;
+            this.Enemy = enemy;
+          
+        }
+        public Battler(Sprite sprite,  Hero hero)
+        {
+            Sprite = sprite;
+     
+            this.Hero = hero;
         }
     }
 }

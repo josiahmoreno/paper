@@ -33,6 +33,7 @@ namespace Scenes.BattlefieldOrderer
 
         public Sprite GetSprite(string enemyIdentifier)
         {
+            Debug.Log($"get spt {enemyIdentifier}");
             return Sprites.First( s => s.Identifier == enemyIdentifier).Sprite;
         }
     }

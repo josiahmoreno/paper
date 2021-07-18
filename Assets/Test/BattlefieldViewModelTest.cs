@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Test
 {
     [TestFixture]
+    [Ignore("Old battlefield")]
     public class BattlefieldViewModelTest
     {
         private IBattleFieldViewModel _battleFieldViewModel;

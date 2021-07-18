@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee94663aa14d34851a96a3f4fcc66554, type: 3}
-  m_Name: GameBattleInstaller
+  m_Name: TestActionWithOrdererBattleInstaller
   m_EditorClassIdentifier: 
-  GameBattleScriptableObject: {fileID: 11400000, guid: 911c7d72c48dd7a47bddab7c13135881, type: 2}
+  GameBattleScriptableObject: {fileID: 11400000, guid: bdb87168ba4de0b4dabf242e69097e4b, type: 2}

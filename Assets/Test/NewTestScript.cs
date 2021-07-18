@@ -19,6 +19,7 @@ public class NewTestScript
     
     
     [Test]
+    [Ignore("Old target")]
     public void HammerTest()
     {
         _targetSystemView = new GameObject().AddComponent<TargetSystemView>();
