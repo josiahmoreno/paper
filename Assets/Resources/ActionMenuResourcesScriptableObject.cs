@@ -26,7 +26,7 @@ using UnityEngine;
                 case "Hammer":
                     return Hammer;
                 case "Abilities":
-                    if (hero.Identity == Heroes.Heroes.Goombario)
+                    if (hero?.Identity == Heroes.Heroes.Goombario)
                     {
                         return goombario;
                     }
@@ -37,5 +37,10 @@ using UnityEngine;
                 default:
                     throw new Exception($"data: {data.Name} not found");
             }
+        }
+
+        public string GetTextForMenuData(IActionMenuData actionMenuData)
+        {
+            return actionMenuData.Name;
         }
     }

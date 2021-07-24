@@ -25,11 +25,15 @@ using Zenject;
             throw new NotImplementedException();
         }
 
-        
+        public string GetTextForMenuData(IActionMenuData actionMenuData)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public interface IResourceProvider
     {
         Sprite GetSpriteForMenuData(Hero hero, IActionMenuData data);
-        
+
+        string  GetTextForMenuData(IActionMenuData actionMenuData);
     }
