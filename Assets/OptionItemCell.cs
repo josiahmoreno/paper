@@ -20,6 +20,11 @@ public class OptionItemCell : MonoBehaviour, IOptionsListItemCell
         
     }
 
+    private void OnDestroy()
+    {
+        this.item.SelectedChange -= OnSelectedChange;
+    }
+
     public void Configure(IOptionsListViewItem optionsListViewItem)
     {
       
