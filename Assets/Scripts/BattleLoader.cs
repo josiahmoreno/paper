@@ -6,12 +6,18 @@ using Battle;
 using Heroes;
 using Items;
 using PaperLib.Enemies;
+using UnityEngine;
 using Enemy = Enemies.Enemy;
+using PaperLib;
+using Enemies;
 
-public class BattleLoader
+public class BattleLoader: PaperLib.ILogger
 {
     public Battle.Battle ConvertToBattle(GameBattleScriptableObject jrTroop)
     {
+        
+     
+        Battle.Battle.Logger = this;
         var bubbleSystem = new TextBubbleSystem();
         var heroes = new List<Heroes.Hero>();
         var enemies = new List<Enemy>();
@@ -46,8 +52,8 @@ public class BattleLoader
 
             if (enemy.name == "JrTroopa")
             {
-                var scriptAttack = new ScriptAttack(EnemyAttack.JrTroopaPowerJump);
-                var JrTroopa = new Enemies.JrTroopa(new List<IEnemyAttack> { new RegularAttack(EnemyAttack.JrTroopaJump, 1) });
+                var scriptAttack = new ScriptAttack(Attacks.Attacks.JrTroopaPowerJump);
+                var JrTroopa = new Enemies.JrTroopa(new List<IEnemyAttack> { new RegularAttackWrapper(Attacks.Attacks.JrTroopaJump, 1) });
                 enemies.Add(JrTroopa);
             }
             if(enemy.name == "Goomba")
@@ -62,8 +68,8 @@ public class BattleLoader
                 new Attacks.Hammer());
         //var Goompa = new Goompa();
         var goombario = new Goombario(bubbleSystem);
-        var scriptAttack = new ScriptAttack(EnemyAttack.JrTroopaPowerJump);
-        var JrTroopa = new Enemies.JrTroopa(new List<IEnemyAttack> { new RegularAttack(EnemyAttack.JrTroopaJump, 1) });
+        var scriptAttack = new ScriptAttack(Attacks.Attacks.JrTroopaPowerJump);
+        var JrTroopa = new Enemies.JrTroopa(new List<IEnemyAttack> { new RegularAttackWrapper(Attacks.Attacks.JrTroopaJump, 1) });
         var enemies22 = new List<Enemy>()
             {
                 JrTroopa
@@ -178,4 +184,6 @@ public class BattleLoader
     {
         return new Inventory();
     }
+
+    public void Log(string v) => Debug.Log("yo "+v);
 }

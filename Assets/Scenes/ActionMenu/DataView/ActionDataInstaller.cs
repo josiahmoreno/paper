@@ -17,7 +17,7 @@ public class ActionDataInstaller : Installer<ActionDataInstaller>
         Container.BindInstance(data).AsSingle();
         Container.BindInterfacesAndSelfTo<ActionDataModel>().AsTransient();
         Container.BindInterfacesAndSelfTo<ActionDataPresenter>().AsTransient();
-        Debug.Log($"parent name = {parent?.name}");
+        //Debug.Log($"parent name = {parent?.name}");
         Container.BindInterfacesAndSelfTo<ActionDataView>().FromComponentInHierarchy().AsSingle();
 
         //.FromComponentInNewPrefab(ActionViewPrefab)

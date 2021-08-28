@@ -119,6 +119,7 @@ public class GameBattleScriptableObject : ScriptableObject, IBattleProvider
             {
                 Debug.Log("GAMEBATTLESO - Creating new battle");
                 _Battle = new BattleLoader().ConvertToBattle(this);
+
             }
             return _Battle;
         }

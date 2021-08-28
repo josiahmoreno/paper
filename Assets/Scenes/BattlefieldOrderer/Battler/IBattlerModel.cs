@@ -5,12 +5,15 @@ namespace Scenes.BattlefieldOrderer
     public interface IBattlerModel
     {
         Sprite GetSprite();
+
+        IBattler Battler { get; }
+
     }
 
     public class BattlerModel : IBattlerModel
     {
-        private IBattler Battler;
-
+        public IBattler Battler { get;}
+        
         public BattlerModel(IBattler battler)
         {
             Battler = battler;

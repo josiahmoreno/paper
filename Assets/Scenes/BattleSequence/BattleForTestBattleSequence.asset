@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee94663aa14d34851a96a3f4fcc66554, type: 3}
   m_Name: BattleForTestBattleSequence
   m_EditorClassIdentifier: 
-  GameBattleScriptableObject: {fileID: 0}
+  GameBattleScriptableObject: {fileID: 11400000, guid: c93fbce08b5594c49a244613b2647ac3, type: 2}

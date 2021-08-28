@@ -34,7 +34,14 @@ namespace Scenes.BattlefieldOrderer
          
                 Debug.Log($"BattlerSpawner {enemy} {position}");
                 view.transform.localPosition = position;
-            
+                try
+                {
+                    (enemy as NewBaseEnemy).Sequenceable = new UnitySequenceable(view);
+                } catch(Exception e)
+                {
+                    Debug.Log($"BattlerSpawner - failed to get movement target{enemy} {position}");
+                }
+                
                 return view;
             });
         }

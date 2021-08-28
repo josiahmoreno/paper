@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd7ded0f1a2a18b4bb650eb82d5a7b69, type: 3}
   m_Name: Battle
   m_EditorClassIdentifier: 
-  Heroes: []
-  Enemies: []
+  Heroes:
+  - name: Mario
+    Playable: 0
+    AttacksList: 000000000100000002000000
+    InventoryInformation: []
+  Enemies:
+  - name: Goomba
+    AttacksList: 
+  - name: Goomba
+    AttacksList: 
   BattleEvents: []

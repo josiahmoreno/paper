@@ -67,8 +67,8 @@ public class GameBattleProvider : MonoBehaviour, IInitializable
                 new Attacks.Hammer());
            var Goompa = new Goompa();
            //var goombario = new Goombario(bubbleSystem);
-            var scriptAttack = new ScriptAttack(EnemyAttack.JrTroopaPowerJump);
-            var JrTroopa = new JrTroopa(new List<IEnemyAttack> { new RegularAttack(EnemyAttack.JrTroopaJump, 1) });
+            var scriptAttack = new ScriptAttack(Attacks.Attacks.JrTroopaPowerJump);
+            var JrTroopa = new JrTroopa(new List<IEnemyAttack> { new RegularAttackWrapper(Attacks.Attacks.JrTroopaJump, 1) });
             var enemies = new List<Enemy>()
             {
                 JrTroopa
@@ -164,7 +164,7 @@ public class GameBattleProvider : MonoBehaviour, IInitializable
             new List<IJumps> { new Attacks.Jump(), new PowerJump() }.ToArray(),
             new Attacks.Hammer());
         var goombario = new Goombario(bubbleSystem);
-        var GoombaKing = new GoombaKing(new List<IEnemyAttack> { new ScriptAttack(EnemyAttack.GoomnutJump), new GoombaKingKick() });
+        var GoombaKing = new GoombaKing(new List<IEnemyAttack> { new ScriptAttack(Attacks.Attacks.GoomnutJump), new GoombaKingKick() });
         var goomNutTree = new GoomnutTree();
         var enemies = new List<Enemy>()
         {

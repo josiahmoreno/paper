@@ -16,6 +16,15 @@ public class BattlerViewInstaller : Installer<BattlerViewInstaller>
         Container.BindInterfacesAndSelfTo<BattlerModel>().AsTransient();
         Container.BindInterfacesAndSelfTo<BattlerPresenter>().AsTransient();
         Container.BindInterfacesAndSelfTo<BattlerView>().FromComponentInHierarchy().AsSingle();
+        if (data.Hero != null)
+        {
+            Container.BindInstance(data.Hero.Health);
+
+        } else
+        {
+            Container.BindInstance(data.Enemy.Health);
+        }
+
     }
 }
     // Start is called before the first frame update
