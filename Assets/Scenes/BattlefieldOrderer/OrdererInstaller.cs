@@ -26,12 +26,12 @@ public class OrdererInstaller: ScriptableObjectInstaller<OrdererInstaller>
             .ByNewPrefabMethod(Settings.defaultBattlerViewPrefab,(subCon,data,trans) =>
             {
                 //subCon.Install<BattlerViewInstaller>();
-                Debug.Log($"Order Installer - en {data?.Enemy}");
+                //Debug.Log($"Order Installer - en {data?.Enemy}");
                 subCon.BindInstance(data).AsSingle();
                 subCon.BindInstance(trans);
                 subCon.Bind<Enemy>().FromResolveGetter<IBattler>((bat) =>
                 {
-                    Debug.Log($"Order Installer - getter {data?.Enemy}");
+                    //Debug.Log($"Order Installer - getter {data?.Enemy}");
                     return bat.Enemy;
                 }).WhenInjectedInto<TargetViewInstaller>();
                 //subCon.BindInstance(data.Enemy).WhenInjectedInto<TargetViewInstaller>();

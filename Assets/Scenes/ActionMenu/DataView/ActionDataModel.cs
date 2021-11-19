@@ -17,7 +17,7 @@ namespace Scenes.ActionMenu.DataView
 
         public ActionDataModel(IActionViewItem data, MenuData.IActionMenu actionMenu)
         {
-            Debug.Log($"MenuData {data.name} isMenuShowing {actionMenu.Showing} active {actionMenu.ActiveAction}");
+            //Debug.Log($"MenuData {data.name} isMenuShowing {actionMenu.Showing} active {actionMenu.ActiveAction}");
             this.ActionMenu = actionMenu;
             actionMenu.OnActiveActionChanged += (sender, menuData) => OnSelectedChanged?.Invoke(this, IsSelected);
             this.data = data;

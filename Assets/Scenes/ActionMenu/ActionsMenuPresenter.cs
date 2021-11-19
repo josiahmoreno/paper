@@ -21,6 +21,10 @@ class ActionsMenuPresenter: IActionsMenuPresenter
         {
             view.MoveDown();
         };
+        this.model.OnHide += (_, showing) =>
+        {
+            view.Show(showing);
+        };
     }
 
     public IActionsMenuView View { get; set; }
@@ -38,8 +42,6 @@ class ActionsMenuPresenter: IActionsMenuPresenter
     }
     
     
-
-    
 }
 
 public interface IActionsMenuModel
@@ -49,4 +51,6 @@ public interface IActionsMenuModel
 
     event EventHandler OnMoveUp;
     event EventHandler OnMoveDown;
+
+    event EventHandler<bool> OnHide;
 }

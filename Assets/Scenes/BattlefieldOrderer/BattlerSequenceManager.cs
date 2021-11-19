@@ -35,13 +35,13 @@ namespace Scenes.BattlefieldOrderer
 
         private void executeJump(BattlerView mario, BattlerView goomba, IDamageTarget damageTarget)
         {
-            executeJump(new UnitySequenceable(mario), new UnityMovementTarget(goomba.transform), damageTarget);
+            //executeJump(new UnitySequenceable(mario), new Position(goomba.transform.lol), damageTarget);
         }
-        public void executeJump(ISequenceable mario, IMovementTarget goomba, IDamageTarget damageTarget)
+        public void executeJump(ISequenceable mario, IPositionable goomba, IDamageTarget damageTarget)
         {
             
-            var jumpSequence = new JumpSequence(new PaperLogger(), damageTarget);
-            jumpSequence.Execute(mario, goomba);
+            var jumpSequence = new JumpSequence(new PaperLogger());
+            jumpSequence.Execute(mario, goomba,damageTarget);
         }
     }
 }

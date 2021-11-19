@@ -8,6 +8,7 @@ using DG.Tweening;
 using Heroes;
 using Enemies;
 using Attacks;
+using System.Threading;
 
 public class TestSequncer : MonoBehaviour
 {
@@ -35,30 +36,30 @@ public class TestSequncer : MonoBehaviour
     }
     public void SetSequenceable(BattlerView battlerView)
     {
-        hero = battlerView.Enemy;
+        hero = battlerView.Hero;
         sequenceable = new UnitySequenceable(battlerView);
     }
 
     public void SetMovementTarget(BattlerView battlerView)
     {
-        enemy = battlerView.Hero;
+        enemy = battlerView.Enemy;
         movementTarget = new UnitySequenceable(battlerView);
     }
 
     public void executeJumpSequence()
     {
-        SetSequenceable(BattlefieldOrderer.BattlerViews[1]);
-        SetMovementTarget(BattlefieldOrderer.BattlerViews[0]);
-        Attacks.IAttack jump = (hero as NewGoomba).Moves[0];
+        SetSequenceable(BattlefieldOrderer.BattlerViews[0]);
+        SetMovementTarget(BattlefieldOrderer.BattlerViews[1]);
+        Attacks.IAttack jump = (hero as Mario).Jumps[0];
         var damageTarget = new DamageTarget(hero, enemy, jump, new UnityQuicktime());
-        jumpSequence = new JumpSequence(new PaperLogger(), damageTarget);
-        jumpSequence.Execute(sequenceable, movementTarget);
+        jumpSequence = new JumpSequence(new PaperLogger());
+        jumpSequence.Execute(sequenceable, movementTarget, damageTarget);
     }
 
-    public void executeJump(ISequenceable mario, IMovementTarget goomba, IDamageTarget damageTarget)
+    public void executeJump(ISequenceable mario, IPositionable goomba, IDamageTarget damageTarget)
     {
-        jumpSequence = new JumpSequence(new PaperLogger(), damageTarget);
-        jumpSequence.Execute(sequenceable, movementTarget);
+        jumpSequence = new JumpSequence(new PaperLogger());
+        jumpSequence.Execute(sequenceable, movementTarget,damageTarget);
     }
 
     // Update is called once per frame
@@ -84,35 +85,70 @@ public class DamageTarget : IDamageTarget
         this.Attack = jump;
         this.quicktime = unityQuicktime;
     }
+
+    public bool GetQuicktimeResult()
+    {
+        return quicktime.Getter();
+    }
 }
 public class UnitySequenceable : ISequenceable
 {
+
     private BattlerView battlerView;
 
     public UnitySequenceable(BattlerView battlerView)
     {
         this.battlerView = battlerView;
-        Position = new Tuple<float, float, float>(
-        battlerView.transform.localPosition.x,
-        battlerView.transform.localPosition.y,
-        battlerView.transform.localPosition.z
-        );
+
+        //x = battlerView.transform.localPosition.x;
+        //y = battlerView.transform.localPosition.y;
+        //z = battlerView.transform.localPosition.z;
+        
     }
 
-    public Tuple<float, float, float> Position { get; set; }
+    public float x
+    {
+        get => battlerView.transform.localPosition.x; set
+        {
+            Vector3 vector3 = battlerView.transform.localPosition;
+            vector3.x = value;
+            battlerView.transform.localPosition = vector3;
+        }
+    }
+    public float y
+    {
+        get => battlerView.transform.localPosition.y; set
+        {
+            Vector3 vector3 = battlerView.transform.localPosition;
+            vector3.y = value;
+            battlerView.transform.localPosition = vector3;
+        }
+    }
+    public float z
+    {
+        get => battlerView.transform.localPosition.z; set
+        {
+            Vector3 vector3 = battlerView.transform.localPosition;
+            vector3.z = value;
+            battlerView.transform.localPosition = vector3;
+        }
+    }
 
     public Action OnMoveComplete { get; set; }
+   
+    //{ get; set; }
 
-    public IMovementTarget CopyPosition()
+    public IPositionable CopyPosition()
     {
-        return new UnityMovementTarget(battlerView.transform);
+        Debug.Log($"{this.GetType().Name} - copying position {{{x},{y},{z}}} but transform is {battlerView.transform.localPosition}");
+        return new Position(x,y,z);
     }
 
 
-    public void Jump(IMovementTarget p, Action jump)
+    public void Jump(IPositionable p, Action jump)
     {
-        Debug.Log($"TestSequrncer - 1jumping to {(p as UnityMovementTarget)}, from {battlerView.transform.localPosition}");
-        Vector3 vec = (p as UnityMovementTarget).Vector3();
+        Debug.Log($"TestSequrncer - 1jumping to {(p)}, from {battlerView.transform.localPosition}");
+        Vector3 vec = (p as Position).Vector3();
         Debug.Log($"TestSequrncer - 2jumping to {vec}"); 
         var seq = battlerView.transform.DOLocalJump(vec, 100f, 1, 1);
       
@@ -133,13 +169,13 @@ public class UnitySequenceable : ISequenceable
 
     private Guid Guid = Guid.NewGuid();
 
-    public void MoveTo(IMovementTarget p)
+    public void MoveTo(IPositionable p)
     {
-        Debug.Log($"{GetType().Name} {Guid.ToString().Substring(0, 4)} - dotween is moving to {p}");
-        var core = battlerView.transform.DOLocalMove(new Vector3(p.Position.Item1,p.Position.Item2,p.Position.Item3),1f);
+        //Debug.Log($"{GetType().Name} {Guid.ToString().Substring(0, 4)} - dotween is moving to {p}");
+        var core = battlerView.transform.DOLocalMove(new Vector3(p.x,p.y,p.z),1f);
         core.OnComplete(() => {
                
-            Debug.Log($"{GetType().Name} {Guid.ToString().Substring(0, 4)} dotween oncomplete");
+            //Debug.Log($"{GetType().Name} {Guid.ToString().Substring(0, 4)} dotween oncomplete");
             var OnMoveComplete2 = OnMoveComplete;
             OnMoveComplete = null;
             OnMoveComplete2?.Invoke();
@@ -147,64 +183,149 @@ public class UnitySequenceable : ISequenceable
         //core.Complete();
     }
 
-    public void StartAnimation()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMovementTarget Copy()
-    {
-        return CopyPosition();
-    }
 
     public override string ToString()
     {
-        return $"{{{GetType().Name} - {Guid.ToString().Substring(0, 4)} {Position.Item1},{Position.Item2},{Position.Item3}}}";
+        return $"{{{GetType().Name} - {Guid.ToString().Substring(0, 4)} {{{x},{y},{z}}} ";
+    }
+
+    
+
+    public void Post(SendOrPostCallback sendOrPostCallback, object v)
+    {
+        Debug.Log($"{GetType().Name} - Post");
+        try
+        {
+            IEnumerator ExampleCoroutine()
+            {
+                //Print the time of when the function is first called.
+                Debug.Log("Started Coroutine at timestamp : " + Time.time);
+
+                //yield on a new YieldInstruction that waits for 5 seconds.
+                yield return new WaitForSeconds(2);
+                sendOrPostCallback.Invoke(v);
+                //After we have waited 5 seconds print the time again.
+                Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+            }
+            battlerView.StartCoroutine(ExampleCoroutine());
+        } catch(Exception e)
+        {
+            Debug.LogError(e);
+        }
+    
+    }
+
+    public void Wait(SendOrPostCallback sendOrPostCallback, object v)
+    {
+        Debug.Log($"{GetType().Name} - Post");
+        try
+        {
+            IEnumerator ExampleCoroutine()
+            {
+                //Print the time of when the function is first called.
+                Debug.Log("Started Coroutine at timestamp : " + Time.time);
+
+                //yield on a new YieldInstruction that waits for 5 seconds.
+                yield return new WaitForSeconds(2);
+                sendOrPostCallback.Invoke(v);
+                //After we have waited 5 seconds print the time again.
+                Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+            }
+            battlerView.StartCoroutine(ExampleCoroutine());
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
 }
 
-internal class UnityMovementTarget : IMovementTarget
+/*
+internal class UnityPositionFollower : IPositionable
 {
-    //public Vector3 transform;
-
-    public UnityMovementTarget(Transform transform)
+    //public UnityMovementTarget(float x, float y, float z)
+    //{
+    //    this.x = x;
+    //    this.y = y;
+    //    this.z = z;
+    //}
+    public UnityPositionFollower(Transform transform)
     {
-       
-        this.Position = new Tuple<float, float, float>(
-        transform.localPosition.x,
-        transform.localPosition.y,
-        transform.localPosition.z
-        );
+        this.transform = transform;
+
+       //x= transform.localPosition.x;
+       //y= transform.localPosition.y;
+       //z= transform.localPosition.z;
+        
     }
-    public UnityMovementTarget(Vector3 transform)
-    {
-        this.Position = new Tuple<float, float, float>(
-        transform.x,
-        transform.y,
-        transform.z
-        );
-    }
+    //public UnityMovementTarget(Vector3 transform)
+    //{
+
+    //    x = transform.x;
+    //    y = transform.y;
+    //    z = transform.z;
+        
+    //}
+
+    //public UnityMovementTarget(Tuple<float, float, float> transform)
+    //{
+
+    //    x = transform.Item1;
+    //    y = transform.Item2;
+    //    z = transform.Item3;
+        
+    //}
 
 
-    public static implicit operator Vector3(UnityMovementTarget d) => new Vector3(d.Position.Item1, d.Position.Item2, d.Position.Item3);
-    public static explicit operator UnityMovementTarget(Vector3 b) => new UnityMovementTarget(b);
+    //public static implicit operator Vector3(UnityMovementTarget d) => new Vector3(d.x, d.y, d.z);
+    //public static explicit operator UnityMovementTarget(Vector3 b) => new UnityMovementTarget(b);
 
-    public Tuple<float, float, float> Position { get;  set; }
  
 
     private Guid Guid = Guid.NewGuid();
-    public override string ToString()
+    private Transform transform;
+
+    public float x
     {
-        return $"{GetType().Name} - {Guid.ToString().Substring(0,4)} {Position.Item1},{Position.Item2},{Position.Item3}";
+        get => transform.localPosition.x; set
+        {
+            Vector3 vector3 = transform.localPosition;
+            vector3.x = value;
+            transform.localPosition = vector3;
+        }
+    }
+    public float y {
+        get => transform.localPosition.y; set
+        {
+            Vector3 vector3 = transform.localPosition;
+            vector3.y = value;
+            transform.localPosition = vector3;
+        }
+    }
+    public float z {
+        get => transform.localPosition.z; set
+        {
+            Vector3 vector3 = transform.localPosition;
+            vector3.z = value;
+            transform.localPosition = vector3;
+        }
     }
 
-    public IMovementTarget Copy()
+    public override string ToString()
     {
-        return new UnityMovementTarget(new Vector3(Position.Item1, Position.Item2, Position.Item3));
+        return $"{GetType().Name} - {Guid.ToString().Substring(0,4)} {{{x},{y},{z}}}";
     }
+
+
 
     internal Vector3 Vector3()
     {
-        return new Vector3(Position.Item1, Position.Item2, Position.Item3);
+        return new Vector3(x, y, z);
+    }
+
+    public IPositionable CopyPosition()
+    {
+        return new Position(x, y, z);
     }
 }
+*/

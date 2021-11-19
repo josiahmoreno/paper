@@ -68,7 +68,7 @@ public class OptionsMenuSystem : IOptionsMenuSystem
        public IOptionsListMenuData Data {
               get
               {
-                     Debug.Log($"{GetType().Name} Data get; actionMenu {ActionMenu}");
+                     //Debug.Log($"{GetType().Name} Data get; actionMenu {ActionMenu}");
                      return FetchData(ActionMenu.ActiveAction);
               }
        }

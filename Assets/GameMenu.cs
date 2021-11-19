@@ -52,7 +52,7 @@ public class GameMenu : MonoBehaviour
         this.endingAngle -= (diff * preStartingAngle_);
         System.Diagnostics.Debug.WriteLine($"ActionMenu - diff = {diff}");
         DrawAll();
-        onHide(actionMenu.Showing);
+        onHide(this,actionMenu.Showing);
         
     }
 
@@ -189,7 +189,7 @@ public class GameMenu : MonoBehaviour
         float newY = (float) (y);
         return new Vector3(newX, newY, 0.0f);
     }
-    private void onHide(bool obj)
+    private void onHide(object sender,bool obj)
     {
         this.gameObject.SetActive( obj);
     }

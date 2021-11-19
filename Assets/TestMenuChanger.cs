@@ -18,14 +18,14 @@ public class TestMenuChanger : MonoBehaviour, IMenuMovementChangeProvider
     private int index;
     void Start()
     {
-        Debug.Log($"TestMenuChanger Start");
+        //Debug.Log($"TestMenuChanger Start");
         index = _provider.Battle.ActionMenu.SelectedIndex;
         _provider.Battle.ActionMenu.OnActiveActionChanged += (sender, data) =>
         {
             var diff = index -
                        _provider.Battle.ActionMenu.SelectedIndex;
             index = _provider.Battle.ActionMenu.SelectedIndex;
-            Debug.Log($"TestMenuChanger OnMenuDiff {diff}");
+            //Debug.Log($"TestMenuChanger OnMenuDiff {diff}");
             if (diff == 1)
             {
                 OnMoveUp?.Invoke(this,new EventArgs());

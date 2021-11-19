@@ -71,7 +71,7 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
        
         
         float starting = StartingAngle + (AngleSpacing * selectedIndex); 
-        Debug.Log($" selectedIndex = {ActionMenu.SelectedIndex} ");
+        //Debug.Log($" selectedIndex = {ActionMenu.SelectedIndex} ");
         for (var index = 0; index < MenuData.Count; index++)
         {
             var data = MenuData[index];
@@ -81,7 +81,7 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
             {
                 firstLocation = angle.angle;
             }
-            Debug.Log($"{data.name} - angle =({angle.angle}) Starting ={starting} - {index * AngleSpacing} ");
+            //Debug.Log($"{data.name} - angle =({angle.angle}) Starting ={starting} - {index * AngleSpacing} ");
             (float, float) delta = ((float)(RadiusLength * Math.Cos(angle.toRadians())), ((float)(RadiusLength * Math.Sin(angle.toRadians()))));
             var newLocalPosition = new Vector3(position.x + delta.Item1, position.y + delta.Item2, 0.0f);
             
@@ -158,6 +158,11 @@ public class ActionsMenu : MonoBehaviour, IActionsMenuView
     {
 
     }
+
+    public void Show(bool showing)
+    {
+        this.gameObject.SetActive(showing);
+    }
 }
 
 public interface IActionsDataViewSpawner
@@ -176,6 +181,7 @@ public class ActionMenuModel : IActionsMenuModel
 
         this.actionMenu = actionMenu;
         this.turnSystem = turnSystem;
+       
         this.turnSystem.OnActiveChanged += o =>
         {
             if (o is Hero hero)
@@ -186,6 +192,19 @@ public class ActionMenuModel : IActionsMenuModel
         };
         movementChangeProvider.OnMoveUp += (sender,_) => OnMoveUp?.Invoke(this,null);
         movementChangeProvider.OnMoveDown += (sender,_) => OnMoveDown?.Invoke(this,null);
+    }
+
+    event EventHandler<bool> IActionsMenuModel.OnHide
+    {
+        add
+        {
+            this.actionMenu.OnHide += value;
+        }
+
+        remove
+        {
+            this.actionMenu.OnHide -= value;
+        }
     }
 
     private List<IActionViewItem> Fetch(Hero hero,IActionMenuData[] data)
@@ -219,6 +238,8 @@ internal interface IActionsMenuPresenter
 {
     void OnStart();
     public IActionsMenuView View { get; set; }
+
+    
 }
 
 
@@ -228,6 +249,7 @@ public interface IActionsMenuView
     void MoveUp();
 
     void MoveDown();
+    void Show(bool showing);
 }
 
 [Serializable]
